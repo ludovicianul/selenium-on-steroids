@@ -5,9 +5,11 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
@@ -736,6 +738,24 @@ public class WebDriverHelper {
 		LOG.info("Returning the following driver: " + driver);
 		LOG.info("With capabilities: " + capabilities);
 		return driver;
+	}
+
+	public void goToUrlWithCookie(String url, String cookieName,
+			String cookieValue) {
+		throw new NotImplementedException();
+	}
+
+	public void goToUrlWithCookies(String url,
+			Map<String, String> cookieNamesValues) {
+		throw new NotImplementedException();
+	}
+
+	public List<List<String>> getTableAsList(By tableBy) {
+		throw new NotImplementedException();
+	}
+
+	public List<String> getTableColumn(By tableBy, int columnNumber) {
+		throw new NotImplementedException();
 	}
 
 	/**

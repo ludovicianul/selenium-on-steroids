@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -17,6 +16,7 @@ import java.util.Properties;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
@@ -571,6 +571,24 @@ public final class FileUtils {
 			}
 		}
 		return result;
+	}
+
+	public void writeToFile(String filePath, String toWrite, boolean overwrite) {
+		throw new NotImplementedException();
+	}
+
+	public void writeToFile(String filePath, List<String> toWrite,
+			boolean overwrite) {
+		throw new NotImplementedException();
+	}
+
+	public List<String> readFromFile(String filePath, int lineToStart,
+			int lineToEnd) {
+		throw new NotImplementedException();
+	}
+
+	public Properties readFromFileAsProperties(String filePath) {
+		throw new NotImplementedException();
 	}
 
 }

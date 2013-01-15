@@ -28,10 +28,7 @@ public abstract class AbstractSoSBase {
 	private static final Logger LOG = Logger.getLogger(AbstractSoSBase.class);
 
 	@Rule
-	public TakeScreenshoptOnFailureRule screen = new TakeScreenshoptOnFailureRule(
-			new File("./logs/screenshots"
-					+ new SimpleDateFormat("dd-MM-yyyy").format(new Date())
-					+ "/"));
+	public TakeScreenshoptOnFailureRule screen = new TakeScreenshoptOnFailureRule();
 
 	@Before
 	public void setUp() {
@@ -47,6 +44,8 @@ public abstract class AbstractSoSBase {
 		String platform = fileUtil.getPropertyAsString("platform");
 		String userAgent = fileUtil.getPropertyAsString("userAgent");
 		String noProxyFor = fileUtil.getPropertyAsString("noProxyFor");
+		String screenShotFolder = fileUtil
+				.getPropertyAsString("screenshotFolder");
 
 		boolean assumeAllCertsUntrusted = fileUtil
 				.getPropertyAsBoolean("assumeAllCertsUntrusted");
@@ -64,6 +63,11 @@ public abstract class AbstractSoSBase {
 		if (userAgent == null || userAgent.isEmpty()
 				|| userAgent.startsWith("$")) {
 			userAgent = null;
+		}
+
+		if (screenShotFolder == null || screenShotFolder.isEmpty()
+				|| screenShotFolder.startsWith("$")) {
+			screenShotFolder = Constants.DEFAULT_SCREENSHOT_FOLDER;
 		}
 
 		if (noProxyFor == null || noProxyFor.isEmpty()

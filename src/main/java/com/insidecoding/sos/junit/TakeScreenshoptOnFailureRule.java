@@ -24,9 +24,14 @@ public class TakeScreenshoptOnFailureRule implements TestRule {
 
 	private boolean takeScreenshot;
 	private WebDriver driver;
-	private final File directory;
+	private File directory;
 	private static final Logger LOG = Logger
 			.getLogger(TakeScreenshoptOnFailureRule.class);
+
+	public void setScreenshotFolder(File folder) {
+		this.directory = folder;
+		directory.mkdirs();
+	}
 
 	public void setTakeScreenshot(boolean takeScreenshot) {
 		this.takeScreenshot = takeScreenshot;
@@ -41,9 +46,8 @@ public class TakeScreenshoptOnFailureRule implements TestRule {
 	 * 
 	 * @param directory
 	 */
-	public TakeScreenshoptOnFailureRule(File directory) {
-		this.directory = directory;
-		directory.mkdirs();
+	public TakeScreenshoptOnFailureRule() {
+
 	}
 
 	@Override
