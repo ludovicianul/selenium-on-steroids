@@ -9,8 +9,15 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 
+/**
+ * This class offers utility method to interact with the Database
+ * 
+ * @author ludovicianul
+ * 
+ */
 public final class DBUtils {
 
 	private String dbString;
@@ -19,6 +26,21 @@ public final class DBUtils {
 	private String pwd;
 	private static final Logger LOG = Logger.getLogger(DBUtils.class);
 
+	/**
+	 * This will throw a {@link ClassNotFoundException} if the Driver class is
+	 * not found
+	 * 
+	 * @param driverClass
+	 *            the fully qualified driver class
+	 * @param dbString
+	 *            the DB string used to connect to the database; please remember
+	 *            that each DB has its own connection string
+	 * @param usr
+	 *            the username used to connect to the DB
+	 * @param pwd
+	 *            the username password used to connect to the DB
+	 * @throws ClassNotFoundException
+	 */
 	public DBUtils(String driverClass, String dbString, String usr, String pwd)
 			throws ClassNotFoundException {
 		this.dbString = dbString;
@@ -30,7 +52,9 @@ public final class DBUtils {
 	}
 
 	/**
-	 * Runs a select query against the DB and get the results in a list
+	 * Runs a select query against the DB and get the results in a list of
+	 * lists. Each item in the list will be a list of items corresponding to a
+	 * row returned by the select
 	 * 
 	 * @param sql
 	 *            a SELECT sql that will be executed
@@ -41,6 +65,7 @@ public final class DBUtils {
 		List<List<String>> results = new ArrayList<List<String>>();
 		LOG.info("Connecting to: " + this.dbString + " with " + this.usr
 				+ " and " + this.pwd);
+		LOG.info("Executing: " + sql);
 		Connection connection = null;
 		Statement st = null;
 		ResultSet rs = null;
@@ -72,6 +97,7 @@ public final class DBUtils {
 			}
 		}
 
+		LOG.info("Result returned after running " + sql + " is: " + results);
 		return results;
 
 	}
@@ -90,17 +116,22 @@ public final class DBUtils {
 	 */
 	public List<String> getValuesOfColumn(int columnNumber, String sqlQuery)
 			throws SQLException {
+		LOG.info("Connecting to: " + this.dbString + " with " + this.usr
+				+ " and " + this.pwd);
+		LOG.info("Executing: " + sqlQuery);
 		List<String> result = new ArrayList<String>();
 		List<List<String>> allResults = this.doSelect(sqlQuery);
 		for (List<String> list : allResults) {
 			result.add(list.get(columnNumber));
 		}
 
+		LOG.info("Result returned after running " + sqlQuery + " is: " + result);
 		return result;
 	}
 
 	/**
-	 * This method can execute any of: INSERT, DELETE, UPDATE
+	 * This method can execute any of the following statements: INSERT, DELETE,
+	 * UPDATE
 	 * 
 	 * @param sql
 	 *            the sql to be executed
@@ -110,6 +141,7 @@ public final class DBUtils {
 
 		LOG.info("Connecting to: " + this.dbString + " with " + this.usr
 				+ " and " + this.pwd);
+		LOG.info("Running: " + sql);
 		Connection connection = null;
 		Statement st = null;
 
@@ -133,6 +165,6 @@ public final class DBUtils {
 	}
 
 	public void doSqlWithParams() {
-
+		throw new NotImplementedException();
 	}
 }

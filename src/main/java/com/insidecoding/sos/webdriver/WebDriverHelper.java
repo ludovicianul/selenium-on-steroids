@@ -4,6 +4,7 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -75,7 +76,8 @@ public class WebDriverHelper {
 	/**
 	 * Check if the specified element is present into the page
 	 * 
-	 * @param - the method of identifying the element
+	 * @param the
+	 *            method of identifying the element
 	 * @return true if the element is present or false otherwise
 	 */
 	public boolean isElementPresent(final By by) {
@@ -94,7 +96,7 @@ public class WebDriverHelper {
 	 * @param by
 	 *            the method of identifying the element
 	 * @param element
-	 *            - the root element that will be searched
+	 *            the root element that will be searched
 	 * @return true if {@code element} contains an element identified by
 	 *         {@code by} or false otherwise
 	 */
@@ -113,7 +115,7 @@ public class WebDriverHelper {
 	 * @param by
 	 *            the method of identifying the element
 	 * @param maximumSeconds
-	 *            - maximum number of methods to wait for the element to be
+	 *            maximum number of methods to wait for the element to be
 	 *            present
 	 */
 	public void waitForElementPresent(final By by, final int maximumSeconds) {
@@ -125,9 +127,9 @@ public class WebDriverHelper {
 	 * Waits until a text will be displayed within the page
 	 * 
 	 * @param text
-	 *            - text to wait for
+	 *            text to wait for
 	 * @param maximumSeconds
-	 *            - maximum number of seconds to wait for the text to be present
+	 *            maximum number of seconds to wait for the text to be present
 	 */
 	public void waitForTextPresentWithinPage(final String text,
 			final int maximumSeconds) {
@@ -750,8 +752,28 @@ public class WebDriverHelper {
 		throw new NotImplementedException();
 	}
 
+	/**
+	 * Returns the contents of the table as a list. Each item in the list
+	 * contains a table row
+	 * 
+	 * @param tableBy
+	 *            the method of identifying the table
+	 * @return a list containing all the items within the table
+	 */
 	public List<List<String>> getTableAsList(By tableBy) {
-		throw new NotImplementedException();
+		List<List<String>> all = new ArrayList<List<String>>();
+		WebElement table = driver.findElement(tableBy);
+
+		List<WebElement> rows = table.findElements(By.tagName("tr"));
+		for (WebElement row : rows) {
+			List<String> toAdd = new ArrayList<String>();
+			List<WebElement> columns = row.findElements(By.tagName("td"));
+			for (WebElement column : columns) {
+				toAdd.add(column.getText());
+			}
+			all.add(toAdd);
+		}
+		return all;
 	}
 
 	public List<String> getTableColumn(By tableBy, int columnNumber) {

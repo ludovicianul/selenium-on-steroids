@@ -26,7 +26,7 @@ public final class XMLUtils {
 
 	/**
 	 * You must pass the xml string and the tag name. This should be called for
-	 * situations like this: <age>18</age>
+	 * situations where you want to get the value of a simple tag: <age>18</age><br/>
 	 * 
 	 * In this case, in order to get the 18 value we call the method like this:
 	 * getTagText(xml, "age"); and this will return 18
@@ -34,8 +34,10 @@ public final class XMLUtils {
 	 * The method will return the first tag it encounters
 	 * 
 	 * @param xmlString
+	 *            the XML string
 	 * @param tagName
-	 * @return
+	 *            the tag name
+	 * @return the value corresponding to the {@code tagName}
 	 */
 	public String getTagText(String xmlString, String tagName) {
 		try {
@@ -67,7 +69,7 @@ public final class XMLUtils {
 			return element.getTextContent();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("Error while parsing XML: ", e);
 		}
 
 		return null;
@@ -85,9 +87,13 @@ public final class XMLUtils {
 	 * The method returns the first tag it encounter
 	 * 
 	 * @param xmlString
+	 *            the XML string
 	 * @param tagName
+	 *            the tag name
 	 * @param attribute
-	 * @return
+	 *            the attribute name
+	 * @return the value of the {@code attribute} corresponding to the
+	 *         {@code tagName}
 	 */
 	public String getValueOfTagAttribute(String xmlString, String tagName,
 			String attribute) {
@@ -120,7 +126,7 @@ public final class XMLUtils {
 			return element.getAttribute(attribute);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("Error while parsing XML: ", e);
 		}
 
 		return null;

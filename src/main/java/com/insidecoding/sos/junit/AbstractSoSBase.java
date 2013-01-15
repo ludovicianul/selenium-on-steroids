@@ -1,9 +1,5 @@
 package com.insidecoding.sos.junit;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
@@ -15,7 +11,10 @@ import com.insidecoding.sos.io.FileUtils;
 import com.insidecoding.sos.webdriver.WebDriverHelper;
 
 /**
- * This is the base class for all your JUNIT/Selenium tests
+ * This is the base class for all your JUNIT/Selenium tests. By extendind this
+ * class you'll have access to a preconfigured WebDriver instance based on your
+ * parameters from {@code selenium.properties}. </br> You can set various
+ * properties that allows you to configure the WebDriver instance
  * 
  * @author ludovicianul
  * 
@@ -129,14 +128,18 @@ public abstract class AbstractSoSBase {
 	}
 
 	/**
-	 * Implement this method in you own test classes to set up additional
-	 * settings
+	 * This method is called by the {@link #setpUp()} method at the beginning of
+	 * each test in order to create the WebDriver instance that will be used in
+	 * your tests mock data. Add any data that needs to be in place in order to
+	 * run your tests
 	 */
 	protected abstract void doAdditionalSetUp();
 
 	/**
-	 * Implement this method in you own test classes to do additional release of
-	 * resources
+	 * This method is called by the {@link #tearDown()} method at the end of
+	 * each test in order to release resources (like for example quiting the
+	 * WebDriver instance). You can add your own logic for releasing the
+	 * resources created in the {@link #setUp()} method
 	 */
 	protected abstract void doAdditionalTearDown();
 

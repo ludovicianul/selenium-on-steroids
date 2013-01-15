@@ -1,5 +1,11 @@
 package com.insidecoding.sos.net;
 
+/**
+ * Object returned after Http calls
+ * 
+ * @author ludovicianul
+ * 
+ */
 public class HttpResponse {
 	private int responseCode;
 	private String responseContent;

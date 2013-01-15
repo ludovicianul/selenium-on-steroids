@@ -40,9 +40,9 @@ public class HttpCallUtils {
 	 * involved or you just want to post a XML message to a URL.
 	 * 
 	 * @param urlString
-	 *            - the url to post to
+	 *            the url to post to
 	 * @param fileToBeSent
-	 *            - the file that will be sent
+	 *            the file that will be sent
 	 * @return a {@link HttpResponse} object containing the response code and
 	 *         the response string
 	 * @throws IOException
@@ -62,9 +62,13 @@ public class HttpCallUtils {
 	 * host as parameters.
 	 * 
 	 * @param urlString
+	 *            the URL to post to
 	 * @param fileToBeSent
+	 *            the file to be sent
 	 * @param proxyHost
+	 *            any proxy host that needs to be configured
 	 * @param proxyPort
+	 *            any proxy port that needs to be configured
 	 * @return a {@link HttpResponse} object containing the response code and
 	 *         the response string
 	 * @throws IOException
@@ -84,9 +88,13 @@ public class HttpCallUtils {
 	 * password.
 	 * 
 	 * @param urlString
+	 *            the URL to post to
 	 * @param fileToBeSent
+	 *            the file to be sent
 	 * @param userName
+	 *            the username that will be used for Basic Auth
 	 * @param userPassword
+	 *            the username password that will be used for Basic Auth
 	 * @return a {@link HttpResponse} object containing the response code and
 	 *         the response string
 	 * @throws IOException
@@ -104,7 +112,9 @@ public class HttpCallUtils {
 	 * involved or you just want to post a XML message to a URL.
 	 * 
 	 * @param urlString
+	 *            the URL to post to
 	 * @param stringToSend
+	 *            the string that will be post to the URL
 	 * @return a {@link HttpResponse} object containing the response code and
 	 *         the response string
 	 * @throws IOException
@@ -123,9 +133,13 @@ public class HttpCallUtils {
 	 * host as parameters.
 	 * 
 	 * @param urlString
+	 *            the URL to post to
 	 * @param stringToSend
+	 *            the string that will be post to the URL
 	 * @param proxyHost
+	 *            any proxy host that needs to be configured
 	 * @param proxyPort
+	 *            any proxy port that needs to be configured
 	 * @return a {@link HttpResponse} object containing the response code and
 	 *         the response string
 	 * @throws IOException
@@ -144,9 +158,13 @@ public class HttpCallUtils {
 	 * password.
 	 * 
 	 * @param urlString
+	 *            the URL to post to
 	 * @param stringToSend
+	 *            the string to be post to the URL
 	 * @param userName
+	 *            the username required by Basic Auth
 	 * @param userPassword
+	 *            the username password required by Basic Auth
 	 * @return a {@link HttpResponse} object containing the response code and
 	 *         the response string
 	 * @throws IOException
@@ -167,14 +185,13 @@ public class HttpCallUtils {
 	 * headers can be provided in the for of (key, value)
 	 * 
 	 * @param urlString
-	 *            - the url to post to
+	 *            the url to post to
 	 * @param stringToSend
-	 *            - the string that will be send
+	 *            the string that will be send
 	 * @param user
-	 *            - the user name in case the connection uses basic
-	 *            authentication
+	 *            the user name in case the connection uses basic authentication
 	 * @param pwd
-	 *            - the user password in case the connection uses basic
+	 *            the user password in case the connection uses basic
 	 *            authentication
 	 * @param proxyHost
 	 *            - the proxy host in case the connection will be made through a

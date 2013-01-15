@@ -15,7 +15,8 @@ import org.openqa.selenium.remote.Augmenter;
 import com.google.common.io.Files;
 
 /**
- * This is a test rule used by the WebDriver to take screenshots on failure
+ * This is a test rule used by the JUNIT framework and WebDriver to take
+ * screenshots on failure
  * 
  * @author ludovicianul
  * 
