@@ -3,6 +3,7 @@ target/
 .project
 .settings/
 *.class
+release.properties
 
 # Package Files #
 *.jar

@@ -60,8 +60,8 @@
 	</mailingLists>
 	<scm>
 		<url>https://github.com/ludovicianul/selenium-on-steroids</url>
-		<connection>scm:git:git://github.com/ludovicianul/selenium-on-steroids.git</connection>
-		<developerConnection>scm:git:git@github.com:ludovicianul/selenium-on-steroids.git</developerConnection>
+		<connection>scm:git:https://github.com/ludovicianul/selenium-on-steroids</connection>
+		<developerConnection>scm:git:https://github.com/ludovicianul/selenium-on-steroids</developerConnection>
 	</scm>
 	<issueManagement>
 		<url>https://github.com/ludovicianul/selenium-on-steroids/issues</url>
