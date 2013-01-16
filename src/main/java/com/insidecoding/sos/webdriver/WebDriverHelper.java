@@ -10,11 +10,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.Proxy.ProxyType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -742,14 +742,47 @@ public class WebDriverHelper {
 		return driver;
 	}
 
+	/**
+	 * Opens the specified URL using the specified cookie
+	 * 
+	 * @param url
+	 *            the url you want to open
+	 * @param cookieName
+	 *            the cookie name
+	 * @param cookieValue
+	 *            the cookie value
+	 */
 	public void goToUrlWithCookie(String url, String cookieName,
 			String cookieValue) {
-		throw new NotImplementedException();
+		// we'll do a trick to prevent Selenium falsely reporting a cross
+		// domain cookie attempt
+		LOG.info("Getting: " + url + " with cookieName: " + cookieName
+				+ " and cookieValue: " + cookieValue);
+		driver.get(url + "/404.html");// this should display 404 not found
+		driver.manage().deleteAllCookies();
+		driver.manage().addCookie(new Cookie(cookieName, cookieValue));
+		driver.get(url);
 	}
 
+	/**
+	 * Opens the specified URL using the specified cookies list
+	 * 
+	 * @param url
+	 *            the URL you want to open
+	 * @param cookieNamesValues
+	 *            the cookies list you want to pass
+	 */
 	public void goToUrlWithCookies(String url,
 			Map<String, String> cookieNamesValues) {
-		throw new NotImplementedException();
+		LOG.info("Getting: " + url + " with cookies: " + cookieNamesValues);
+		driver.get(url + "/404.html");// this should display 404 not found
+		driver.manage().deleteAllCookies();
+		Set<String> cookieNames = cookieNamesValues.keySet();
+		for (String cookieName : cookieNames) {
+			String cookieValue = cookieNamesValues.get(cookieName);
+			driver.manage().addCookie(new Cookie(cookieName, cookieValue));
+		}
+		driver.get(url);
 	}
 
 	/**
@@ -776,8 +809,23 @@ public class WebDriverHelper {
 		return all;
 	}
 
+	/**
+	 * Returns the values for a specific column from a HTML table
+	 * 
+	 * @param tableBy
+	 *            the way to identify the table
+	 * @param columnNumber
+	 *            the column number
+	 * @return a list with all the values corresponding to the specified column
+	 */
 	public List<String> getTableColumn(By tableBy, int columnNumber) {
-		throw new NotImplementedException();
+		List<String> result = new ArrayList<String>();
+		List<List<String>> table = this.getTableAsList(tableBy);
+
+		for (List<String> line : table) {
+			result.add(line.get(columnNumber));
+		}
+		return result;
 	}
 
 	/**

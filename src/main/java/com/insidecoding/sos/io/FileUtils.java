@@ -18,7 +18,6 @@ import java.util.Properties;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
@@ -26,7 +25,6 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xslf.model.geom.LineToCommand;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.insidecoding.sos.junit.AbstractSoSBase;
@@ -729,10 +727,6 @@ public final class FileUtils {
 		}
 		LOG.info("Returning: " + result);
 		return result;
-	}
-
-	public Properties readFromFileAsProperties(String filePath) {
-		throw new NotImplementedException();
 	}
 
 }

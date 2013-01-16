@@ -12,7 +12,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 /**
- * This class offers helper methods to manipulate XML files
+ * This class offers helper methods to manipulate XML files. It does very basic
+ * stuff for. It will be further enhanced with new methods
  * 
  * @author ludovicianul
  * 
