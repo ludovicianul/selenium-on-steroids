@@ -13,7 +13,8 @@ import org.xml.sax.InputSource;
 
 /**
  * This class offers helper methods to manipulate XML files. It does very basic
- * stuff for. It will be further enhanced with new methods
+ * stuff for now. It will be further enhanced with new methods in the near
+ * future
  * 
  * @author ludovicianul
  * 
