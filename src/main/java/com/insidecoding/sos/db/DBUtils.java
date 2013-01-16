@@ -7,13 +7,16 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 
 /**
- * This class offers utility method to interact with the Database
+ * This class offers utility method to interact with the Database. Further
+ * methods will be add in the near future
  * 
  * @author ludovicianul
  * 
@@ -137,7 +140,7 @@ public final class DBUtils {
 	 *            the sql to be executed
 	 * @throws SQLException
 	 */
-	public void doSQL(String sql) throws SQLException {
+	public void doSQL(final String sql) throws SQLException {
 
 		LOG.info("Connecting to: " + this.dbString + " with " + this.usr
 				+ " and " + this.pwd);
@@ -164,7 +167,94 @@ public final class DBUtils {
 
 	}
 
-	public void doSqlWithParams() {
-		throw new NotImplementedException();
+	/**
+	 * This method returns approapiate query clauses to be executed within a SQL
+	 * statement
+	 * 
+	 * @param params
+	 *            the list of parameters - name value
+	 * @param orderParams
+	 * @return the where and order by clause for a SQL statement
+	 */
+	private String getQueryClauses(final Map<String, Object> params,
+			final Map<String, Object> orderParams) {
+		final StringBuffer queryString = new StringBuffer();
+		if ((params != null) && !params.isEmpty()) {
+			queryString.append(" where ");
+			for (final Iterator<Map.Entry<String, Object>> it = params
+					.entrySet().iterator(); it.hasNext();) {
+				final Map.Entry<String, Object> entry = it.next();
+				if (entry.getValue() instanceof Boolean) {
+					queryString.append(entry.getKey()).append(" is ")
+							.append(entry.getValue()).append(" ");
+				} else {
+					if (entry.getValue() instanceof Number) {
+						queryString.append(entry.getKey()).append(" = ")
+								.append(entry.getValue());
+					} else {
+						// string equality
+						queryString.append(entry.getKey()).append(" = '")
+								.append(entry.getValue()).append("'");
+					}
+				}
+				if (it.hasNext()) {
+					queryString.append(" and ");
+				}
+			}
+		}
+		if ((orderParams != null) && !orderParams.isEmpty()) {
+			queryString.append(" order by ");
+			for (final Iterator<Map.Entry<String, Object>> it = orderParams
+					.entrySet().iterator(); it.hasNext();) {
+				final Map.Entry<String, Object> entry = it.next();
+				queryString.append(entry.getKey()).append(" ");
+				if (entry.getValue() != null) {
+					queryString.append(entry.getValue());
+				}
+				if (it.hasNext()) {
+					queryString.append(", ");
+				}
+			}
+		}
+		return queryString.toString();
+	}
+
+	/**
+	 * This method executes a select using the provided parameters in the where
+	 * clause and order orders the results based on the order parameters. Lets
+	 * say you want to execute the following select
+	 * {@code SELECT * from User where username = 'John' and age = '23' order by age asc}
+	 * You to do the following: <br/>
+	 * 
+	 * <pre>
+	 * {@code  String sql = "SELECT * from User";}<br/>
+	 * {@code Map<String, Object> params = new HashMap<String, Object();}<br/>
+	 * {@code params.put("username","John");}<br/>
+	 * {@code params.put("age","23");}<br/>
+	 * {@code Map<String, Object> orderBy = new HashMap<String, Object();}<br/>
+	 * {@code orderBy.put("age","asc");}<br/>
+	 * {@code List<List<String>> result = doSelectWithParams(sql, params, orderBy);}
+	 * </pre>
+	 * 
+	 * This is a simple example in which you can directly send the sql as
+	 * initially. This method should usually be used when the parameters are
+	 * dynamically get
+	 * 
+	 * @param sql
+	 *            the base SQL without the where clause
+	 * @param params
+	 *            the WHERE clause prams in the format (name, value)
+	 * @param orderParams
+	 *            the order by params if needed in the format (name, asc/desc)
+	 * @return a list containing each row from the SELECT in a list
+	 * @throws SQLException
+	 */
+	public List<List<String>> doSelectWithParams(final String sql,
+			final Map<String, Object> params,
+			final Map<String, Object> orderParams) throws SQLException {
+
+		String finalSql = sql + this.getQueryClauses(params, orderParams);
+
+		return this.doSelect(finalSql);
 	}
 }
