@@ -3,7 +3,7 @@ Selenium on Steroids
 The projects targets QA automation engineers that want a clean and simple way of creating Selenium tests 
 allowing them to focus more on designing the test rather than dealing with technical dificulties. 
 Using Maven profiles the instantiation of a WebDriver object with different kind of settings reduces to a simple
-seeting of some predefined properties.
+setting of some predefined properties.
 The project enhances the functionality of the WebDriver by offering additional methods for common tasks.
 You have also available different utility methods in order to interact with simple files, properties files,
 Excel documents, XML documents, Databases, post XML calls, etc, basically everything you need for your data drivern scenarios.
@@ -13,6 +13,7 @@ Features
 * Easy Maven integration: the project is published on Maven Centra so you can easily add it as a Maven dependecy
 * Easily create new Selenium tests by extending a base class which incorporates all the required logic to configure a WebDriver instance
 * Utility methods to interact with DB
+* Enhances the WebDriver API with new methods
 * Utility methods to interact with Excel files
 * Utility methods to interact with text files and XML files
 * Utility methods to use XMLs over HTTP (make WebService calls for example) 
