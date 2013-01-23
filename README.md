@@ -11,7 +11,7 @@ Excel documents, XML documents, Databases, post XML calls, etc, basically everyt
 Features
 ========
 * Easy Maven integration: the project is published on Maven Centra so you can easily add it as a Maven dependecy
-* Very easy to create new Selenium testt but 
+* Easily create new Selenium tests by extending a base class which incorporates all the required logic to configure a WebDriver instance
 * Utility methods to interact with DB
 * Utility methods to interact with Excel files
 * Utility methods to interact with text files and XML files
