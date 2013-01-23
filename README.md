@@ -6,18 +6,18 @@ Using Maven profiles the instantiation of a WebDriver object with different kind
 setting of some predefined properties.
 The project enhances the functionality of the WebDriver by offering additional methods for common tasks.
 You have also available different utility methods in order to interact with simple files, properties files,
-Excel documents, XML documents, Databases, post XML calls, etc, basically everything you need for your data drivern scenarios.
+Excel documents, XML documents, Databases, post XML calls, etc, basically everything you need for your data driven scenarios.
 
 Features
 ========
-* Easy Maven integration: the project is published on Maven Centra so you can easily add it as a Maven dependecy
+* Easy Maven integration: the project is published on Maven Centra so you can easily add it as a Maven dependency
 * Easily create new Selenium tests by extending a base class which incorporates all the required logic to configure a WebDriver instance
 * Utility methods to interact with DB
 * Enhances the WebDriver API with new methods
 * Utility methods to interact with Excel files
 * Utility methods to interact with text files and XML files
 * Utility methods to use XMLs over HTTP (make WebService calls for example) 
-* Easily ontrol different WebDriver instances and configuration through properties
+* Easily control different WebDriver instances and configuration through properties
 * Get screenshots when Selenium tests are failing
 
 Getting started
