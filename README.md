@@ -30,7 +30,7 @@ Changelog
 
 Homepage
 ========
-<http://insidecoding.com/>
+<http://insidecoding.com/selenium-on-steroids/>
 
 Wiki
 ====
