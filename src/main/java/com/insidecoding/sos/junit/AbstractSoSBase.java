@@ -59,6 +59,10 @@ public abstract class AbstractSoSBase {
 		/**
 		 * assign default values if these are null
 		 */
+		if (profileLocation == null || profileLocation.isEmpty()
+				|| profileLocation.startsWith("$")) {
+			profileLocation = null;
+		}
 		if (userAgent == null || userAgent.isEmpty()
 				|| userAgent.startsWith("$")) {
 			userAgent = null;
