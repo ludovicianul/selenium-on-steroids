@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.insidecoding</groupId>
 	<artifactId>sos</artifactId>
@@ -17,8 +18,8 @@
 		<maven.resources.plugin.version>2.6</maven.resources.plugin.version>
 		<maven.compiler.plugin.version>3.0</maven.compiler.plugin.version>
 		<maven.surefire.plugin.version>2.13</maven.surefire.plugin.version>
-		<selenium.java.version>2.28.0</selenium.java.version>
-		<selenium.htmlunit.version>2.28.0</selenium.htmlunit.version>
+		<selenium.java.version>2.29.0</selenium.java.version>
+		<selenium.htmlunit.version>2.29.0</selenium.htmlunit.version>
 		<junit.version>4.10</junit.version>
 		<apache.poi.version>3.9</apache.poi.version>
 		<apache.poi.ooxml.version>3.9</apache.poi.ooxml.version>
@@ -35,6 +36,7 @@
 		<findbugs.version>2.5.2</findbugs.version>
 		<pmd.version>2.7.1</pmd.version>
 		<jacoco-maven-plugin.version>0.6.1.201212231917</jacoco-maven-plugin.version>
+		<xml.apis.version>1.4.01</xml.apis.version>
 	</properties>
 	<licenses>
 		<license>
@@ -213,6 +215,11 @@
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
 			<version>${apache.commons.lang.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
+			<version>${xml.apis.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
