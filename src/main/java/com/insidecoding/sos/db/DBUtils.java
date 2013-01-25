@@ -94,8 +94,7 @@ public final class DBUtils {
 
 			st = connection.createStatement();
 			rs = st.executeQuery(sql);
-			st.closeOnCompletion();
-
+			
 			while (rs.next()) {
 				ResultSetMetaData meta = rs.getMetaData();
 				List<String> lines = new ArrayList<String>();
