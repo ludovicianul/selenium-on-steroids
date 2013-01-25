@@ -10,9 +10,12 @@ import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.internal.Base64Encoder;
 
@@ -20,16 +23,31 @@ import com.insidecoding.sos.io.FileUtils;
 
 /**
  * The methods exposed by this class can be used to call SOAP web services or to
- * post any kind of XML to a specific URL address
+ * post any kind of XML to a specific URL address.
  * 
  * @author ludovicianul
  * 
  */
-public class HttpCallUtils {
+public final class HttpCallUtils {
+
+	/**
+	 * HTTP 400 response code.
+	 */
+	private static final int HTTP_400 = 400;
+
+	/**
+	 * Used to interact with files.
+	 */
 	private FileUtils fileUtil;
 
+	/**
+	 * The Logger for this class.
+	 */
 	private static final Logger LOG = Logger.getLogger(HttpCallUtils.class);
 
+	/**
+	 * Creates a new HttpCallUtils instance.
+	 */
 	public HttpCallUtils() {
 		fileUtil = new FileUtils();
 	}
@@ -43,16 +61,18 @@ public class HttpCallUtils {
 	 *            the url to post to
 	 * @param fileToBeSent
 	 *            the file that will be sent
+	 * @param encoding
+	 *            the file encoding. Examples: "UTF-8", "UTF-16".
 	 * @return a {@link HttpResponse} object containing the response code and
 	 *         the response string
 	 * @throws IOException
 	 *             if a I/O error occurs
 	 */
-	public HttpResponse doHttpCall(String urlString, File fileToBeSent)
-			throws IOException {
+	public HttpResponse doHttpCall(final String urlString,
+			final File fileToBeSent, final String encoding) throws IOException {
 		return this.doHttpCall(urlString,
-				fileUtil.getFileContentsAsString(fileToBeSent), null, null,
-				null, 0, null);
+				fileUtil.getFileContentsAsString(fileToBeSent, encoding), "",
+				"", "", 0, Collections.<String, String> emptyMap());
 	}
 
 	/**
@@ -69,16 +89,19 @@ public class HttpCallUtils {
 	 *            any proxy host that needs to be configured
 	 * @param proxyPort
 	 *            any proxy port that needs to be configured
+	 * @param fileEncoding
+	 *            the file encoding. Examples: "UTF-8", "UTF-16".
 	 * @return a {@link HttpResponse} object containing the response code and
 	 *         the response string
 	 * @throws IOException
 	 *             if a I/O error occurs
 	 */
-	public HttpResponse doHttpCall(String urlString, File fileToBeSent,
-			String proxyHost, int proxyPort) throws IOException {
+	public HttpResponse doHttpCall(final String urlString,
+			final File fileToBeSent, final String proxyHost,
+			final int proxyPort, final String fileEncoding) throws IOException {
 		return this.doHttpCall(urlString,
-				fileUtil.getFileContentsAsString(fileToBeSent), null, null,
-				proxyHost, 0, null);
+				fileUtil.getFileContentsAsString(fileToBeSent, fileEncoding),
+				"", "", proxyHost, 0, Collections.<String, String> emptyMap());
 	}
 
 	/**
@@ -94,17 +117,23 @@ public class HttpCallUtils {
 	 * @param userName
 	 *            the username that will be used for Basic Auth
 	 * @param userPassword
-	 *            the username password that will be used for Basic Auth
+	 *            the password that will be used for Basic Auth
+	 * @param fileEncoding
+	 *            the file encoding. Examples: "UTF-8", "UTF-16". the username
+	 *            password that will be used for Basic Authentication
 	 * @return a {@link HttpResponse} object containing the response code and
 	 *         the response string
 	 * @throws IOException
 	 *             if a I/O error occurs
 	 */
-	public HttpResponse doHttpCall(String urlString, File fileToBeSent,
-			String userName, String userPassword) throws IOException {
+	public HttpResponse doHttpCall(final String urlString,
+			final File fileToBeSent, final String userName,
+			final String userPassword, final String fileEncoding)
+			throws IOException {
 		return this.doHttpCall(urlString,
-				fileUtil.getFileContentsAsString(fileToBeSent), userName,
-				userPassword, null, 0, null);
+				fileUtil.getFileContentsAsString(fileToBeSent, fileEncoding),
+				userName, userPassword, "", 0,
+				Collections.<String, String> emptyMap());
 	}
 
 	/**
@@ -120,10 +149,10 @@ public class HttpCallUtils {
 	 * @throws IOException
 	 *             if a I/O error occurs
 	 */
-	public HttpResponse doHttpCall(String urlString, String stringToSend)
-			throws IOException {
-		return this.doHttpCall(urlString, stringToSend, null, null, null, 0,
-				null);
+	public HttpResponse doHttpCall(final String urlString,
+			final String stringToSend) throws IOException {
+		return this.doHttpCall(urlString, stringToSend, "", "", "", 0,
+				Collections.<String, String> emptyMap());
 	}
 
 	/**
@@ -145,10 +174,11 @@ public class HttpCallUtils {
 	 * @throws IOException
 	 *             if a I/O error occurs
 	 */
-	public HttpResponse doHttpCall(String urlString, String stringToSend,
-			String proxyHost, int proxyPort) throws IOException {
-		return this.doHttpCall(urlString, stringToSend, null, null, proxyHost,
-				0, null);
+	public HttpResponse doHttpCall(final String urlString,
+			final String stringToSend, final String proxyHost,
+			final int proxyPort) throws IOException {
+		return this.doHttpCall(urlString, stringToSend, "", "", proxyHost, 0,
+				Collections.<String, String> emptyMap());
 	}
 
 	/**
@@ -170,10 +200,11 @@ public class HttpCallUtils {
 	 * @throws IOException
 	 *             if a I/O error occurs
 	 */
-	public HttpResponse doHttpCall(String urlString, String stringToSend,
-			String userName, String userPassword) throws IOException {
+	public HttpResponse doHttpCall(final String urlString,
+			final String stringToSend, final String userName,
+			final String userPassword) throws IOException {
 		return this.doHttpCall(urlString, stringToSend, userName, userPassword,
-				null, 0, null);
+				"", 0, Collections.<String, String> emptyMap());
 	}
 
 	/**
@@ -206,16 +237,17 @@ public class HttpCallUtils {
 	 * @throws IOException
 	 *             if a I/O error occurs
 	 */
-	public HttpResponse doHttpCall(String urlString, String stringToSend,
-			String user, String pwd, String proxyHost, int proxyPort,
-			Map<String, String> httpHeaders) throws IOException {
+	public HttpResponse doHttpCall(final String urlString,
+			final String stringToSend, final String user, final String pwd,
+			final String proxyHost, final int proxyPort,
+			final Map<String, String> httpHeaders) throws IOException {
 
 		HttpURLConnection connection = null;
 		HttpResponse result = new HttpResponse();
 		try {
 			URL url = new URL(urlString);
 
-			if (proxyHost != null && !proxyHost.isEmpty()) {
+			if (!StringUtils.isEmpty(proxyHost)) {
 				Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(
 						proxyHost, proxyPort));
 				connection = (HttpURLConnection) url.openConnection(proxy);
@@ -231,14 +263,15 @@ public class HttpCallUtils {
 			connection.setDoOutput(true);
 			connection.setUseCaches(false);
 
-			Set<String> keySet = httpHeaders.keySet();
-			for (String key : keySet) {
-				connection.setRequestProperty(key, httpHeaders.get(key));
+			Set<Entry<String, String>> entrySet = httpHeaders.entrySet();
+			for (Entry<String, String> key : entrySet) {
+				connection.setRequestProperty(key.getKey(), key.getValue());
 			}
 
-			if (user != null && pwd != null) {
+			if (!StringUtils.isEmpty(user) && !StringUtils.isEmpty(pwd)) {
 				String auth = (user + ":" + pwd);
-				String encoding = new Base64Encoder().encode(auth.getBytes());
+				String encoding = new Base64Encoder().encode(auth
+						.getBytes("UTF-8"));
 				connection.setRequestProperty("Authorization", "Basic "
 						+ encoding);
 			}
@@ -254,14 +287,15 @@ public class HttpCallUtils {
 			InputStream is;
 
 			result.setResponseCode(connection.getResponseCode());
-			if (connection.getResponseCode() <= 400) {
+			if (connection.getResponseCode() <= HTTP_400) {
 				is = connection.getInputStream();
 			} else {
 				/* error from server */
 				is = connection.getErrorStream();
 			}
 
-			BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is,
+					"UTF-8"));
 			String line;
 			StringBuilder response = new StringBuilder();
 			while ((line = rd.readLine()) != null) {

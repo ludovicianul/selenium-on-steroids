@@ -4,10 +4,12 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -27,41 +29,60 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.insidecoding.sos.junit.AbstractSoSBase;
-
 /**
  * This class offers helper methods for I/O operations. <br/>
  * It allows you to read/write/append to/from text files, properties files, CSV
  * files and Microsoft Excel files. <br/>
- * This is very helpful for data driven testing
+ * This is very helpful for data driven testing. <br/>
  * 
  * @author ludovicianul
  * 
  */
 public final class FileUtils {
+	/**
+	 * Simple cache that holds all the workbooks that will be used within the
+	 * current run.
+	 */
 	private Map<String, Workbook> workbooks = new HashMap<String, Workbook>();
-	private List<InputStream> FISs = new ArrayList<InputStream>();
+
+	/**
+	 * Holds all the resources that were opened so that they can be released at
+	 * the end of the execution cycle.
+	 */
+	private List<InputStream> fis = new ArrayList<InputStream>();
+
+	/**
+	 * Simple cache that holds all the bunldes used within in the application.
+	 */
 	private Map<String, ResourceBundle> bundles = new HashMap<String, ResourceBundle>();
 
+	/**
+	 * Logger for this class.
+	 */
 	private static final Logger LOG = Logger.getLogger(FileUtils.class);
 
 	/**
-	 * This will call {@code buildupPropertiesBundles("./src/test/resources")}
+	 * This will call {@code buildupPropertiesBundles("./src/test/resources")}.
 	 */
 	public FileUtils() {
-		buildupPropertiesBundles(new File("./src/test/resources"));
+		try {
+			buildupPropertiesBundles(new File("./src/test/resources"));
+		} catch (IOException e) {
+			LOG.warn("No bundle was loaded!!");
+		}
 	}
 
 	/**
-	 * Loads all the properties files from this location
+	 * Loads all the properties files from this location.
 	 * 
 	 * @param resourcesLocation
 	 *            the path from where the properties files will be loaded. This
 	 *            must be a folder otherwise a {@link IOException} will be
 	 *            thrown
 	 * @throws IOException
+	 *             if something goes wrong while reading the resources files
 	 */
-	public FileUtils(String resourcesLocation) throws IOException {
+	public FileUtils(final String resourcesLocation) throws IOException {
 		LOG.info("Loading properties files from: " + resourcesLocation);
 		File file = new File(resourcesLocation);
 		if (!file.exists()) {
@@ -75,20 +96,28 @@ public final class FileUtils {
 	}
 
 	/**
-	 * Loads all properties files into a bundle cache
+	 * Loads all properties files into a bundle cache.
 	 * 
 	 * @param file
 	 *            the folder where the properties files can be found
+	 * @throws IOException
+	 *             if something goes wrong while reading the file
+	 * @throws FileNotFoundException
+	 *             if the file does not exists
 	 */
-	private void buildupPropertiesBundles(File file) {
+	private void buildupPropertiesBundles(final File file)
+			throws FileNotFoundException, IOException {
 		File[] files = file.listFiles();
 
 		for (File f : files) {
 			if (f.getName().endsWith("properties")) {
-				LOG.info("Loading: " + f.getName());
-				ResourceBundle bundle = ResourceBundle.getBundle(f.getName()
-						.substring(0, f.getName().indexOf("properties") - 1));
-				bundles.put(f.getName(), bundle);
+				String bundleName = f.getName().substring(0,
+						f.getName().indexOf("properties") - 1);
+
+				LOG.info("Loading: " + bundleName);
+				ResourceBundle bundle = new PropertyResourceBundle(
+						new FileInputStream(f));
+				bundles.put(bundleName, bundle);
 			}
 		}
 	}
@@ -102,7 +131,8 @@ public final class FileUtils {
 	 * @param locale
 	 *            Locale for which the resource bundle will be loaded.
 	 */
-	public void loadPropertiesBundle(String bundleName, Locale locale) {
+	public void loadPropertiesBundle(final String bundleName,
+			final Locale locale) {
 		LOG.info("Loading properties bundle: " + bundleName);
 		ResourceBundle bundle = ResourceBundle.getBundle(bundleName, locale);
 		bundles.put(bundleName, bundle);
@@ -115,7 +145,7 @@ public final class FileUtils {
 	 *            Name of the bundle to be loaded. This name must be fully
 	 *            qualified.
 	 */
-	public void loadPropertiesBundle(String bundleName) {
+	public void loadPropertiesBundle(final String bundleName) {
 		LOG.info("Loading properties bundle: " + bundleName);
 		ResourceBundle bundle = ResourceBundle.getBundle(bundleName);
 		bundles.put(bundleName, bundle);
@@ -126,8 +156,10 @@ public final class FileUtils {
 	 * 
 	 * @param propertiesFile
 	 *            Path to the properties file.
+	 * @throws IOException
+	 *             is something goes wrong while reading the file
 	 */
-	public void loadPropertiesFromFile(String propertiesFile)
+	public void loadPropertiesFromFile(final String propertiesFile)
 			throws IOException {
 		LOG.info("Loading properties from file: " + propertiesFile);
 		File file = new File(propertiesFile);
@@ -154,8 +186,9 @@ public final class FileUtils {
 	 * 
 	 * @param bundleName
 	 *            The name of the bundle to be retrieved.
+	 * @return returns the specified bundle from the cache
 	 */
-	public ResourceBundle getBundle(String bundleName) {
+	public ResourceBundle getBundle(final String bundleName) {
 		LOG.info("Getting bundle: " + bundleName);
 		return bundles.get(bundleName);
 	}
@@ -171,7 +204,7 @@ public final class FileUtils {
 	 * @return {@code null} if the property is not found; {@code Boolean.TRUE}
 	 *         if the property is true or {@code Boolean.FALSE} otherwise
 	 */
-	public Boolean getPropertyAsBoolean(String key) {
+	public Boolean getPropertyAsBoolean(final String key) {
 		LOG.info("Getting value for key: " + key);
 		for (ResourceBundle bundle : bundles.values()) {
 
@@ -195,16 +228,13 @@ public final class FileUtils {
 	 * @return {@code null} if the property is not found; {@code Boolean.TRUE}
 	 *         if the property is true or {@code Boolean.FALSE} otherwise
 	 */
-	public Boolean getPropertyAsBoolean(String bundleName, String key) {
+	public Boolean getPropertyAsBoolean(final String bundleName,
+			final String key) {
 		LOG.info("Getting value for key: " + key + " from bundle name: "
 				+ bundleName);
 		ResourceBundle bundle = bundles.get(bundleName);
 
-		if (bundle.getString(key) != null) {
-			return Boolean.valueOf(bundle.getString(key));
-		}
-
-		return Boolean.FALSE;
+		return Boolean.valueOf(bundle.getString(key));
 	}
 
 	/**
@@ -218,7 +248,7 @@ public final class FileUtils {
 	 * @return {@code null} if the property is not found or the corresponding
 	 *         value otherwise
 	 */
-	public String getPropertyAsString(String key) {
+	public String getPropertyAsString(final String key) {
 		LOG.info("Getting value for key: " + key);
 		for (ResourceBundle bundle : bundles.values()) {
 
@@ -242,15 +272,11 @@ public final class FileUtils {
 	 * @return {@code null} if the property is not found or the corresponding
 	 *         value otherwise
 	 */
-	public String getPropertyAsString(String bundleName, String key) {
+	public String getPropertyAsString(final String bundleName, final String key) {
 		LOG.info("Getting value for key: " + key + " bundleName:" + bundleName);
 		ResourceBundle bundle = bundles.get(bundleName);
 
-		if (bundle.getString(key) != null) {
-			return bundle.getString(key);
-		}
-
-		return null;
+		return bundle.getString(key);
 	}
 
 	/**
@@ -265,7 +291,7 @@ public final class FileUtils {
 	 * @return {@code -1} if the property is not found or the value is not a
 	 *         number; the corresponding value otherwise
 	 */
-	public int getPropertyAsInteger(String key) {
+	public int getPropertyAsInteger(final String key) {
 		LOG.info("Getting value for key: " + key);
 		for (ResourceBundle bundle : bundles.values()) {
 			try {
@@ -291,7 +317,7 @@ public final class FileUtils {
 	 * @return {@code -1} if the property is not found or the value is not a
 	 *         number; the corresponding value otherwise
 	 */
-	public int getPropertyAsInteger(String bundleName, String key) {
+	public int getPropertyAsInteger(final String bundleName, final String key) {
 		LOG.info("Getting value for key: " + key + " from bundle: "
 				+ bundleName);
 		ResourceBundle bundle = bundles.get(bundleName);
@@ -318,7 +344,7 @@ public final class FileUtils {
 	 * @return {@code -1} if the property is not found or the value is not a
 	 *         number; the corresponding value otherwise
 	 */
-	public double getPropertyAsDouble(String key) {
+	public double getPropertyAsDouble(final String key) {
 		LOG.info("Getting value for key: " + key);
 		for (ResourceBundle bundle : bundles.values()) {
 			try {
@@ -344,7 +370,7 @@ public final class FileUtils {
 	 * @return {@code -1} if the property is not found or the value is not a
 	 *         number; the corresponding value otherwise
 	 */
-	public double getPropertyAsDouble(String bundleName, String key) {
+	public double getPropertyAsDouble(final String bundleName, final String key) {
 		LOG.info("Getting value for key: " + key + " from bundle: "
 				+ bundleName);
 		ResourceBundle bundle = bundles.get(bundleName);
@@ -373,9 +399,10 @@ public final class FileUtils {
 	 *            the cell number; starts from 0
 	 * @return the cell value from the excel file
 	 * @throws IOException
+	 *             if something goes wrong while reading the file
 	 */
-	public String readFromExcel(String fileName, String sheetName,
-			int rowNumber, int cellNumber) throws IOException {
+	public String readFromExcel(final String fileName, final String sheetName,
+			final int rowNumber, final int cellNumber) throws IOException {
 		LOG.info("Reading from file: " + fileName + " sheet: " + sheetName
 				+ " rowNumber: " + rowNumber + " cellNumber:" + cellNumber);
 		Workbook workbook = getWorkbook(fileName);
@@ -413,19 +440,20 @@ public final class FileUtils {
 	 *            the name of file
 	 * @return the workbook corresponding to this file
 	 * @throws IOException
+	 *             if something goes wrong while reading the file
 	 */
-	private Workbook getWorkbook(String fileName) throws IOException {
+	private Workbook getWorkbook(final String fileName) throws IOException {
 		if (workbooks.get(fileName) == null) {
-			FileInputStream fis = new FileInputStream(new File(fileName));
-			FISs.add(fis);
+			FileInputStream fiStream = new FileInputStream(new File(fileName));
+			fis.add(fiStream);
 			Workbook workbook = null;
 			try {
-				workbook = new HSSFWorkbook(fis);
+				workbook = new HSSFWorkbook(fiStream);
 			} catch (OfficeXmlFileException e) {
-				fis.close();
-				fis = new FileInputStream(new File(fileName));
-				FISs.add(fis);
-				workbook = new XSSFWorkbook(fis);
+				fiStream.close();
+				fiStream = new FileInputStream(new File(fileName));
+				fis.add(fiStream);
+				workbook = new XSSFWorkbook(fiStream);
 			}
 			workbooks.put(fileName, workbook);
 
@@ -435,7 +463,8 @@ public final class FileUtils {
 	}
 
 	/**
-	 * Gets the number of rows populated within the supplied file and sheet name
+	 * Gets the number of rows populated within the supplied file and sheet
+	 * name.
 	 * 
 	 * @param fileName
 	 *            the name of the file
@@ -443,8 +472,9 @@ public final class FileUtils {
 	 *            the sheet name
 	 * @return the number of rows
 	 * @throws IOException
+	 *             if something goes wrong while reading the file
 	 */
-	public int getNumberOfRows(String fileName, String sheetName)
+	public int getNumberOfRows(final String fileName, final String sheetName)
 			throws IOException {
 		LOG.info("Getting the number of rows from:" + fileName + " sheet: "
 				+ sheetName);
@@ -456,14 +486,15 @@ public final class FileUtils {
 	/**
 	 * You MUST call this method after you finish running your tests. <br/>
 	 * Usually you can do this in a @After method (tearDown()). <br/>
-	 * If you just extend the provided {@link AbstractSoSBase} you won't need to
+	 * If you just extend the provided {@code AbstractSoSBase} you won't need to
 	 * worry about it
 	 */
 	public void releaseResources() {
-		for (InputStream str : FISs) {
+		for (InputStream str : fis) {
 			try {
 				str.close();
 			} catch (Exception e) {
+				LOG.info("Exception while trying to close streams", e);
 			}
 		}
 	}
@@ -474,14 +505,19 @@ public final class FileUtils {
 	 * 
 	 * @param file
 	 *            the file
+	 * @param encoding
+	 *            the file encoding. Example: "UTF-8", "UTF-16"
 	 * @return a String object with the contents of the file
 	 * @throws IOException
+	 *             if something goes wrong while reading the file
 	 */
-	public String getFileContentsAsString(File file) throws IOException {
+	public String getFileContentsAsString(final File file, final String encoding)
+			throws IOException {
 		LOG.info("Getting files contents as string: " + file);
 		BufferedReader br = null;
 		try {
-			br = new BufferedReader(new FileReader(file));
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(
+					file), encoding));
 
 			StringBuilder builder = new StringBuilder();
 
@@ -505,25 +541,36 @@ public final class FileUtils {
 	 * 
 	 * @param fileName
 	 *            the name of the file
+	 * @param encoding
+	 *            the file encoding. Examples: "UTF-8", "UTF-16"
 	 * @return a String object with the contents of the file
 	 * @throws IOException
+	 *             if something goes wrong while reading the file
 	 */
-	public String getFileContentsAsString(String fileName) throws IOException {
-		return this.getFileContentsAsString(new File(fileName));
+	public String getFileContentsAsString(final String fileName,
+			final String encoding) throws IOException {
+		return this.getFileContentsAsString(new File(fileName), encoding);
 	}
 
 	/**
-	 * Parses a CSV file based on the header received
+	 * Parses a CSV file based on the header received.
 	 * 
 	 * @param headers
 	 *            a comma separated list of headers
+	 * @param file
+	 *            the file to read from
 	 * @param separator
 	 *            the separator used in the CSV file
+	 * @param encoding
+	 *            the file encoding. Examples: "UTF-8", "UTF-16".
 	 * @return a Map having the Headers as keys and a corresponding list for
 	 *         each value
+	 * @throws IOException
+	 *             if something goes wrong while reading the file
 	 */
-	public Map<String, List<String>> parseCSV(String headers, String file,
-			String separator) throws IOException {
+	public Map<String, List<String>> parseCSV(final String headers,
+			final String file, final String separator, final String encoding)
+			throws IOException {
 		LOG.info("Parsing CSVs from file: " + file + " with headers: "
 				+ headers + " separator: " + separator);
 		Map<String, List<String>> result = new HashMap<String, List<String>>();
@@ -532,7 +579,8 @@ public final class FileUtils {
 
 			String[] headersArr = headers.split(",");
 
-			reader = new BufferedReader(new FileReader(new File(file)));
+			reader = new BufferedReader(new InputStreamReader(
+					new FileInputStream(file), encoding));
 			String line = null;
 
 			while ((line = reader.readLine()) != null) {
@@ -572,7 +620,8 @@ public final class FileUtils {
 	 * @return a Properties object corresponding to the supplied bundle object
 	 * 
 	 */
-	public Properties convertResourceBundleToProperties(ResourceBundle resource) {
+	public Properties convertResourceBundleToProperties(
+			final ResourceBundle resource) {
 		Properties properties = new Properties();
 
 		Enumeration<String> keys = resource.getKeys();
@@ -591,15 +640,20 @@ public final class FileUtils {
 	 * 
 	 * @param fileName
 	 *            the name of the file
+	 * @param encoding
+	 *            the file encoding. Examples: "UTF-8", "UTF-16".
 	 * @return a list of Strings contains the lines of the file
 	 * @throws IOException
+	 *             if something goes wrong while reading the file
 	 */
-	public List<String> getFileAsList(String fileName) throws IOException {
+	public List<String> getFileAsList(final String fileName,
+			final String encoding) throws IOException {
 		LOG.info("Get file as list. file: " + fileName);
 		List<String> result = new ArrayList<String>();
 		BufferedReader reader = null;
 		try {
-			reader = new BufferedReader(new FileReader(new File(fileName)));
+			reader = new BufferedReader(new InputStreamReader(
+					new FileInputStream(fileName), encoding));
 			String line = null;
 			while ((line = reader.readLine()) != null) {
 				result.add(line);
@@ -627,18 +681,24 @@ public final class FileUtils {
 	 * @param overwrite
 	 *            true if you want to overwrite an existing file or false
 	 *            otherwise
+	 * @param fileEncoding
+	 *            the file encoding. Examples: "UTF-8", "UTF-16".
 	 * @throws IOException
+	 *             if something goes wrong while writing to the file
 	 */
-	public void writeToFile(String filePath, String toWrite, boolean overwrite)
+	public void writeToFile(final String filePath, final String toWrite,
+			final boolean overwrite, final String fileEncoding)
 			throws IOException {
 		File file = new File(filePath);
 		if (!file.exists()) {
-			file.createNewFile();
+			boolean created = file.createNewFile();
+			LOG.info("File successfully created: " + created);
 		}
 
 		BufferedWriter writer = null;
 		try {
-			writer = new BufferedWriter(new FileWriter(file, overwrite));
+			writer = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(file, overwrite), fileEncoding));
 			writer.write(toWrite);
 
 			writer.flush();
@@ -664,18 +724,24 @@ public final class FileUtils {
 	 * @param overwrite
 	 *            true if you want to overwrite an existing file or false
 	 *            otherwise
+	 * @param fileEncoding
+	 *            the file encoding. Examples: "UTF-8", "UTF-16".
 	 * @throws IOException
+	 *             if something goes wrong while writing to file
 	 */
-	public void writeToFile(String filePath, List<String> toWrite,
-			boolean overwrite) throws IOException {
+	public void writeToFile(final String filePath, final List<String> toWrite,
+			final boolean overwrite, final String fileEncoding)
+			throws IOException {
 		File file = new File(filePath);
 		if (!file.exists()) {
-			file.createNewFile();
+			boolean created = file.createNewFile();
+			LOG.info("File successfully created: " + created);
 		}
 
 		BufferedWriter writer = null;
 		try {
-			writer = new BufferedWriter(new FileWriter(file, overwrite));
+			writer = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(file, overwrite), fileEncoding));
 			for (String s : toWrite) {
 				writer.write(s);
 				writer.newLine();
@@ -690,7 +756,7 @@ public final class FileUtils {
 	}
 
 	/**
-	 * Reads the content of the file between the specific line numbers
+	 * Reads the content of the file between the specific line numbers.
 	 * 
 	 * @param filePath
 	 *            the path to the file
@@ -698,12 +764,16 @@ public final class FileUtils {
 	 *            the line number to start with
 	 * @param lineToEnd
 	 *            the line number to end with
-	 * @return a list of strings for each line betwen {@code LineToStart} and
+	 * @param encoding
+	 *            the file encoding. Examples: "UTF-8", "UTF-16".
+	 * @return a list of strings for each line between {@code LineToStart} and
 	 *         {@code lineToEnd}
 	 * @throws IOException
+	 *             if something goes wrong while reading the file
 	 */
-	public List<String> readFromFile(String filePath, int lineToStart,
-			int lineToEnd) throws IOException {
+	public List<String> readFromFile(final String filePath,
+			final int lineToStart, final int lineToEnd, final String encoding)
+			throws IOException {
 		if (lineToStart > lineToEnd) {
 			throw new IllegalArgumentException(
 					"Line to start must be lower than line to end");
@@ -713,7 +783,8 @@ public final class FileUtils {
 		BufferedReader reader = null;
 		int i = 0;
 		try {
-			reader = new BufferedReader(new FileReader(new File(filePath)));
+			reader = new BufferedReader(new InputStreamReader(
+					new FileInputStream(filePath), encoding));
 			String line = null;
 			while ((line = reader.readLine()) != null && i >= lineToStart
 					&& i <= lineToEnd) {

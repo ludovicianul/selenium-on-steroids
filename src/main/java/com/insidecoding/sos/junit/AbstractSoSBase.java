@@ -1,5 +1,6 @@
 package com.insidecoding.sos.junit;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
@@ -11,26 +12,46 @@ import com.insidecoding.sos.io.FileUtils;
 import com.insidecoding.sos.webdriver.WebDriverHelper;
 
 /**
- * This is the base class for all your JUNIT/Selenium tests. By extendind this
+ * This is the base class for all your JUNIT/Selenium tests. By extending this
  * class you'll have access to a preconfigured WebDriver instance based on your
- * parameters from {@code selenium.properties}. </br> You can set various
- * properties that allows you to configure the WebDriver instance
+ * parameters from {@code selenium.properties}. You can set various properties
+ * that allows you to configure the WebDriver instance
  * 
  * @author ludovicianul
  * 
  */
 public abstract class AbstractSoSBase {
-
+	/**
+	 * The WebDriver instance.
+	 */
 	protected WebDriver driver;
+
+	/**
+	 * The WebDriver helper instance.
+	 */
 	protected WebDriverHelper helper;
+
+	/**
+	 * Used to get the selenium proeprties.
+	 */
 	protected FileUtils fileUtil;
+
+	/**
+	 * The Logger for this class.
+	 */
 	private static final Logger LOG = Logger.getLogger(AbstractSoSBase.class);
 
+	/**
+	 * JUNIT Rule used to take screenshots on failure.
+	 */
 	@Rule
 	public TakeScreenshoptOnFailureRule screen = new TakeScreenshoptOnFailureRule();
 
+	/**
+	 * Method called before starting each test.
+	 */
 	@Before
-	public void setUp() {
+	public final void setUp() {
 		fileUtil = new FileUtils();
 		fileUtil.loadPropertiesBundle("selenium");
 
@@ -48,7 +69,7 @@ public abstract class AbstractSoSBase {
 
 		boolean assumeAllCertsUntrusted = fileUtil
 				.getPropertyAsBoolean("assumeAllCertsUntrusted");
-		boolean jsEnabled = fileUtil.getPropertyAsBoolean("jsEnabled");
+		String jsEnabled = fileUtil.getPropertyAsString("jsEnabled");
 		boolean flakiness = fileUtil.getPropertyAsBoolean("flakiness");
 		boolean acceptAllCerts = fileUtil
 				.getPropertyAsBoolean("acceptAllCerts");
@@ -56,54 +77,52 @@ public abstract class AbstractSoSBase {
 		boolean takeScreenshots = fileUtil
 				.getPropertyAsBoolean("takeScreenshots");
 
+		boolean jsEnabledBoolean = Boolean.getBoolean(jsEnabled);
+
 		/**
 		 * assign default values if these are null
 		 */
-		if (profileLocation == null || profileLocation.isEmpty()
-				|| profileLocation.startsWith("$")) {
+		if (isPropertyNotSet(profileLocation)) {
 			profileLocation = null;
 		}
-		if (userAgent == null || userAgent.isEmpty()
-				|| userAgent.startsWith("$")) {
+		if (isPropertyNotSet(userAgent)) {
 			userAgent = null;
 		}
 
-		if (screenShotFolder == null || screenShotFolder.isEmpty()
-				|| screenShotFolder.startsWith("$")) {
+		if (isPropertyNotSet(screenShotFolder)) {
 			screenShotFolder = Constants.DEFAULT_SCREENSHOT_FOLDER;
 		}
 
-		if (noProxyFor == null || noProxyFor.isEmpty()
-				|| noProxyFor.startsWith("$")) {
+		if (isPropertyNotSet(noProxyFor)) {
 			noProxyFor = null;
 		}
 
-		if (browserVersion == null || browserVersion.isEmpty()
-				|| browserVersion.startsWith("$")) {
+		if (isPropertyNotSet(browserVersion)) {
 			browserVersion = null;
 		}
 
-		if (browserName == null || browserName.isEmpty()
-				|| browserName.startsWith("$")) {
+		if (isPropertyNotSet(browserName)) {
 			browserName = Constants.Browsers.FIREFOX;
 		}
 
-		if (runMode == null || runMode.isEmpty() || runMode.startsWith("$")) {
+		if (isPropertyNotSet(runMode)) {
 			runMode = Constants.RunMode.NORMAL;
 		}
 
-		if (platform == null || platform.isEmpty() || platform.startsWith("$")) {
-			platform = "LINUX";
+		if (isPropertyNotSet(platform)) {
+			platform = Constants.Platform.WINDOWS;
 		}
 
-		if (proxyHost == null || proxyHost.isEmpty()
-				|| proxyHost.startsWith("$")) {
+		if (isPropertyNotSet(proxyHost)) {
 			proxyHost = null;
 		}
 
-		if (proxyPort == null || proxyPort.isEmpty()
-				|| proxyPort.startsWith("$")) {
+		if (isPropertyNotSet(proxyPort)) {
 			proxyPort = null;
+		}
+
+		if (isPropertyNotSet(jsEnabled)) {
+			jsEnabledBoolean = true;
 		}
 
 		WebDriverHelper.Builder driverBuilder = new WebDriverHelper.Builder();
@@ -112,7 +131,7 @@ public abstract class AbstractSoSBase {
 				.acceptAllCerts(acceptAllCerts).grid(gridUrl)
 				.platform(platform).flackinessForIe(flakiness)
 				.profileLocation(profileLocation).userAgent(userAgent)
-				.jsEnabled(jsEnabled).browserVersion(browserVersion)
+				.jsEnabled(jsEnabledBoolean).browserVersion(browserVersion)
 				.assumeAllCertsUtrusted(assumeAllCertsUntrusted).buildDriver();
 
 		LOG.info("Driver returned: " + driver);
@@ -122,11 +141,13 @@ public abstract class AbstractSoSBase {
 		screen.setTakeScreenshot(takeScreenshots);
 
 		this.doAdditionalSetUp();
-
 	}
 
+	/**
+	 * Method called after executing each test.
+	 */
 	@After
-	public void tearDown() {
+	public final void tearDown() {
 		fileUtil.releaseResources();
 		this.doAdditionalTearDown();
 	}
@@ -146,5 +167,17 @@ public abstract class AbstractSoSBase {
 	 * resources created in the {@link #setUp()} method
 	 */
 	protected abstract void doAdditionalTearDown();
+
+	/**
+	 * Checks if the property is empty or is not set
+	 * 
+	 * @param property
+	 *            the name of the property
+	 * @return true if the property is set or false is null, empty or starts
+	 *         with $
+	 */
+	private boolean isPropertyNotSet(final String property) {
+		return StringUtils.isEmpty(property) || property.startsWith("$");
+	}
 
 }

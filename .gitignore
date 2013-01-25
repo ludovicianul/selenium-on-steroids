@@ -5,6 +5,8 @@ target/
 *.class
 release.properties
 
+logs/
+
 # Package Files #
 *.jar
 *.war

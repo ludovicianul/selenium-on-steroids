@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -34,18 +35,35 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.insidecoding.sos.Constants;
 
 /**
- * This class decorates the WebDriver API with more helper methods
+ * This class decorates the WebDriver API with more helper methods.
  * 
  * @author ludovicianul
  * 
  */
-public class WebDriverHelper {
+public final class WebDriverHelper {
 
+	/**
+	 * The WebDriver instance being decorated.
+	 */
 	private WebDriver driver;
+
+	/**
+	 * Stores the main windows when dealing with multiple windows.
+	 */
 	private String mainWindow;
+
+	/**
+	 * The Logger for the class.
+	 */
 	private static final Logger LOG = Logger.getLogger(WebDriverHelper.class);
 
-	public WebDriverHelper(WebDriver d) {
+	/**
+	 * You must pass a valid WebDriver instance.
+	 * 
+	 * @param d
+	 *            the WebDriver instance
+	 */
+	public WebDriverHelper(final WebDriver d) {
 		if (d == null) {
 			throw new IllegalArgumentException("Driver is NULL!");
 		}
@@ -55,7 +73,7 @@ public class WebDriverHelper {
 	/**
 	 * Call this method before using the driver into another window. Remember to
 	 * call {@link WebDriverHelper.#dswitchBackToMainWindow()} when you want to
-	 * return to the main window
+	 * return to the main window.
 	 */
 	public void storeMainWindow() {
 		mainWindow = driver.getWindowHandle();
@@ -63,7 +81,7 @@ public class WebDriverHelper {
 
 	/**
 	 * Switches back to the main window. You must call storeMainWindow() before
-	 * calling this method
+	 * calling this method.
 	 */
 	public void switchBackToMainWindow() {
 		if (mainWindow == null) {
@@ -74,9 +92,9 @@ public class WebDriverHelper {
 	}
 
 	/**
-	 * Check if the specified element is present into the page
+	 * Check if the specified element is present into the page.
 	 * 
-	 * @param the
+	 * @param by
 	 *            method of identifying the element
 	 * @return true if the element is present or false otherwise
 	 */
@@ -91,7 +109,7 @@ public class WebDriverHelper {
 
 	/**
 	 * Checks if the suplied {@code element} contains another element identified
-	 * by {@code by}
+	 * by {@code by}.
 	 * 
 	 * @param by
 	 *            the method of identifying the element
@@ -110,7 +128,7 @@ public class WebDriverHelper {
 	}
 
 	/**
-	 * Waits until an element will be displayed into the page
+	 * Waits until an element will be displayed into the page.
 	 * 
 	 * @param by
 	 *            the method of identifying the element
@@ -124,7 +142,7 @@ public class WebDriverHelper {
 	}
 
 	/**
-	 * Waits until a text will be displayed within the page
+	 * Waits until a text will be displayed within the page.
 	 * 
 	 * @param text
 	 *            text to wait for
@@ -152,7 +170,7 @@ public class WebDriverHelper {
 	}
 
 	/**
-	 * Waits for an element to contain some text
+	 * Waits for an element to contain some text.
 	 * 
 	 * @param by
 	 *            the method of identifying the element
@@ -163,18 +181,21 @@ public class WebDriverHelper {
 			final int maximumSeconds) {
 		(new WebDriverWait(driver, maximumSeconds))
 				.until(new ExpectedCondition<Boolean>() {
-					public Boolean apply(WebDriver error1) {
+					public Boolean apply(final WebDriver error1) {
 						return !driver.findElement(by).getText().isEmpty();
 					}
 				});
 	}
 
 	/**
-	 * Waits until an element contains a specific text
+	 * Waits until an element contains a specific text.
 	 * 
 	 * @param by
+	 *            method of identifying the element
 	 * @param text
+	 *            the element text to wait for
 	 * @param maximumSeconds
+	 *            the maximum number of seconds to wait for
 	 */
 	public void waitForElementToContainSpecificText(final By by,
 			final String text, final int maximumSeconds) {
@@ -183,7 +204,7 @@ public class WebDriverHelper {
 	}
 
 	/**
-	 * Checks for presence of the text in a html page
+	 * Checks for presence of the text in a html page.
 	 * 
 	 * @param text
 	 *            the text to be searched for
@@ -196,7 +217,7 @@ public class WebDriverHelper {
 
 	/**
 	 * Checks if a text is displayed in the drop-down. This method considers the
-	 * actual display text <br/>
+	 * actual display text. <br/>
 	 * For example if we have the following situation: &lt;select id="test"&gt;
 	 * &lt;option value="4"&gt;June&lt;/option&gt; &lt;/select&gt; we will call
 	 * the method as follows: isValuePresentInDropDown(By.id("test"), "June");
@@ -217,7 +238,7 @@ public class WebDriverHelper {
 
 	/**
 	 * Checks if the VALUE is present in the drop-down. This considers the VALUE
-	 * attribute of the option, not the actual display text <br/>
+	 * attribute of the option, not the actual display text. <br/>
 	 * For example if we have the following situation: &lt;select id="test"&gt;
 	 * &lt;option value="4"&gt;June&lt;/option&gt; &lt;/select&gt; we will call
 	 * the method as follows: isValuePresentInDropDown(By.id("test"), "4");
@@ -228,7 +249,7 @@ public class WebDriverHelper {
 	 *            the value to search for
 	 * @return true if the value is present in the drop-down or false otherwise
 	 */
-	public boolean isValuePresentInDropDown(By by, String value) {
+	public boolean isValuePresentInDropDown(final By by, final String value) {
 		WebElement element = driver.findElement(by);
 
 		StringBuilder builder = new StringBuilder(".//option[@value = ");
@@ -242,7 +263,7 @@ public class WebDriverHelper {
 
 	/**
 	 * Select a value from a drop down list based on the actual value, NOT
-	 * DISPLAYED TEXT
+	 * DISPLAYED TEXT.
 	 * 
 	 * @param by
 	 *            the method of identifying the drop-down
@@ -256,7 +277,7 @@ public class WebDriverHelper {
 	}
 
 	/**
-	 * Select text from a drop down list based on the displayed text
+	 * Select text from a drop down list based on the displayed text.
 	 * 
 	 * @param by
 	 *            the method of identifying the drop-down
@@ -264,14 +285,15 @@ public class WebDriverHelper {
 	 *            the text based on which the value will be selected
 	 */
 
-	public void selectOptionFromDropdownByDisplayText(By by, String displayText) {
+	public void selectOptionFromDropdownByDisplayText(final By by,
+			final String displayText) {
 		Select select = new Select(driver.findElement(by));
 		select.selectByVisibleText(displayText);
 	}
 
 	/**
 	 * Checks if a text is selected in a drop down list. This will consider the
-	 * display text not the actual value
+	 * display text not the actual value.
 	 * 
 	 * @param by
 	 *            the method of identifying the drop-down
@@ -297,7 +319,7 @@ public class WebDriverHelper {
 	}
 
 	/**
-	 * Returns the first selected value from a drop down list
+	 * Returns the first selected value from a drop down list.
 	 * 
 	 * @param by
 	 *            the method of identifying the element
@@ -312,7 +334,7 @@ public class WebDriverHelper {
 	}
 
 	/**
-	 * Checks if a value is selected in a drop down list
+	 * Checks if a value is selected in a drop down list.
 	 * 
 	 * @param by
 	 *            the method of identifying the element
@@ -340,7 +362,7 @@ public class WebDriverHelper {
 	}
 
 	/**
-	 * Deselects all the elements from a drop down list
+	 * Deselects all the elements from a drop down list.
 	 * 
 	 * @param by
 	 *            the method of identifying the element
@@ -351,7 +373,7 @@ public class WebDriverHelper {
 	}
 
 	/**
-	 * Select the supplied value from a radio button group
+	 * Select the supplied value from a radio button group.
 	 * 
 	 * @param radioButtonName
 	 *            the name of the radio button
@@ -372,7 +394,7 @@ public class WebDriverHelper {
 	}
 
 	/**
-	 * Checks if a radio button group has the supplied value selected
+	 * Checks if a radio button group has the supplied value selected.
 	 * 
 	 * @param radioButtonName
 	 *            the name of the radio button group
@@ -397,12 +419,12 @@ public class WebDriverHelper {
 	}
 
 	/**
-	 * Used to switch to a window by title
+	 * Used to switch to a window by title.
 	 * 
 	 * @param title
 	 *            the title of the window to switch to
 	 */
-	public void selectWindowByTitle(String title) {
+	public void selectWindowByTitle(final String title) {
 		String currentWindow = driver.getWindowHandle();
 		Set<String> handles = driver.getWindowHandles();
 		if (!handles.isEmpty()) {
@@ -416,7 +438,7 @@ public class WebDriverHelper {
 	}
 
 	/**
-	 * Returns a WebDriver object that has the proxy server set
+	 * Returns a WebDriver object that has the proxy server set.
 	 * 
 	 * @param proxyURL
 	 *            the proxy host
@@ -426,8 +448,8 @@ public class WebDriverHelper {
 	 *            the drive class
 	 * @return a new driver with the proxy settings configured
 	 */
-	public static WebDriver getDriverWithProxy(String proxyURL, String port,
-			WebDriver driver) {
+	public static WebDriver getDriverWithProxy(final String proxyURL,
+			final String port, final WebDriver driver) {
 		org.openqa.selenium.Proxy proxy = new org.openqa.selenium.Proxy();
 		proxy.setHttpProxy(proxyURL + ":" + port)
 				.setFtpProxy(proxyURL + ":" + port)
@@ -449,7 +471,7 @@ public class WebDriverHelper {
 	}
 
 	/**
-	 * Creates a FirefoxDriver that has the supplied user agent
+	 * Creates a FirefoxDriver that has the supplied user agent.
 	 * 
 	 * @param userAgent
 	 *            the user agent
@@ -457,7 +479,7 @@ public class WebDriverHelper {
 	 *         settings
 	 */
 
-	public static WebDriver getFirefoxDriverWithUserAgent(String userAgent) {
+	public static WebDriver getFirefoxDriverWithUserAgent(final String userAgent) {
 		ProfilesIni allProfiles = new ProfilesIni();
 		FirefoxProfile profile = allProfiles.getProfile("default");
 		profile.setPreference("general.useragent.override", userAgent);
@@ -477,20 +499,20 @@ public class WebDriverHelper {
 	 * @return a new FirefoxDriver that loads the supplied profile
 	 */
 	public static WebDriver getFirefoxDriverWithExistingProfile(
-			String pathToProfile) {
+			final String pathToProfile) {
 		FirefoxProfile profile = new FirefoxProfile(new File(pathToProfile));
 
 		return new FirefoxDriver(profile);
 	}
 
 	/**
-	 * Escapes the quotes for the supplied string
+	 * Escapes the quotes for the supplied string.
 	 * 
 	 * @param toEscape
 	 *            string to be escaped
 	 * @return an escaped string
 	 */
-	public String escapeQuotes(String toEscape) {
+	public String escapeQuotes(final String toEscape) {
 		if (toEscape.indexOf("\"") > -1 && toEscape.indexOf("'") > -1) {
 			boolean quoteIsLast = false;
 			if (toEscape.indexOf("\"") == toEscape.length() - 1) {
@@ -517,14 +539,17 @@ public class WebDriverHelper {
 
 	/**
 	 * Gets a profile with a specific user agent with or without javascript
-	 * enabled
+	 * enabled.
 	 * 
 	 * @param userAgent
+	 *            the user agent
 	 * @param javascriptEnabled
-	 * @return
+	 *            javascript enabled or not
+	 * @return a FirefoxDriver instance with javascript and user agent seetigs
+	 *         configured
 	 */
-	public static WebDriver getFirefoxDriverWithJSSettings(String userAgent,
-			boolean javascriptEnabled) {
+	public static WebDriver getFirefoxDriverWithJSSettings(
+			final String userAgent, final boolean javascriptEnabled) {
 		FirefoxProfile profile = new FirefoxProfile();
 		profile.setPreference("general.useragent.override", userAgent);
 		profile.setPreference("javascript.enabled", javascriptEnabled);
@@ -536,14 +561,15 @@ public class WebDriverHelper {
 	/**
 	 * Returns a DesiredCapabilities object specific to the {@code browser}
 	 * being sent as parameter. If the browser does not exists if default to
-	 * firefox
+	 * firefox.
 	 * 
 	 * @param browser
 	 *            the browser name
 	 * @return a specific DesiredCapabilities object corresponding to the
 	 *         supplied browser
 	 */
-	private static DesiredCapabilities getCapabilitiesBrowser(String browser) {
+	private static DesiredCapabilities getCapabilitiesBrowser(
+			final String browser) {
 		DesiredCapabilities capabilities = null;
 		Method[] methods = DesiredCapabilities.class.getDeclaredMethods();
 		for (Method m : methods) {
@@ -569,14 +595,16 @@ public class WebDriverHelper {
 	}
 
 	/**
-	 * Returns a web driver instance based on capabilities
+	 * Returns a web driver instance based on capabilities.
 	 * 
 	 * @param capabilities
 	 *            the desired capabilities
+	 * @param builder
+	 *            the Builder instance
 	 * @return a new WebDriver instance with the desired capabilities specified
 	 */
 	private static WebDriver getDriverInstance(
-			DesiredCapabilities capabilities, Builder builder) {
+			final DesiredCapabilities capabilities, final Builder builder) {
 		WebDriver driver = null;
 		try {
 
@@ -600,7 +628,7 @@ public class WebDriverHelper {
 
 	/**
 	 * This method adds browser specific capabilities like FirefoxProfile and
-	 * ChromeOptions
+	 * ChromeOptions.
 	 * 
 	 * @param capabilities
 	 *            specific capabilities
@@ -608,7 +636,7 @@ public class WebDriverHelper {
 	 *            the builder object containing the properties
 	 */
 	private static void addSpecificBrowserSettings(
-			DesiredCapabilities capabilities, Builder builder) {
+			final DesiredCapabilities capabilities, final Builder builder) {
 		if (capabilities.getBrowserName().equalsIgnoreCase(
 				Constants.Browsers.FIREFOX)) {
 			LOG.info("Browser is Firefox. Getting local profile");
@@ -651,12 +679,13 @@ public class WebDriverHelper {
 
 	/**
 	 * This method returns a fully configured WebDriver instance based on the
-	 * parameters sent
+	 * parameters sent.
 	 * 
 	 * @param builder
+	 *            the Builder used to construct the WebDriver instance
 	 * @return a fully configured FirefoxDriver instance
 	 */
-	private static WebDriver getDriver(Builder builder) {
+	private static WebDriver getDriver(final Builder builder) {
 		// this is the default value
 		DesiredCapabilities capabilities = getCapabilitiesBrowser(builder.browser);
 		WebDriver driver = null;
@@ -743,7 +772,7 @@ public class WebDriverHelper {
 	}
 
 	/**
-	 * Opens the specified URL using the specified cookie
+	 * Opens the specified URL using the specified cookie.
 	 * 
 	 * @param url
 	 *            the url you want to open
@@ -752,48 +781,49 @@ public class WebDriverHelper {
 	 * @param cookieValue
 	 *            the cookie value
 	 */
-	public void goToUrlWithCookie(String url, String cookieName,
-			String cookieValue) {
+	public void goToUrlWithCookie(final String url, final String cookieName,
+			final String cookieValue) {
 		// we'll do a trick to prevent Selenium falsely reporting a cross
 		// domain cookie attempt
 		LOG.info("Getting: " + url + " with cookieName: " + cookieName
 				+ " and cookieValue: " + cookieValue);
-		driver.get(url + "/404.html");// this should display 404 not found
+		driver.get(url + "/404.html"); // this should display 404 not found
 		driver.manage().deleteAllCookies();
 		driver.manage().addCookie(new Cookie(cookieName, cookieValue));
 		driver.get(url);
 	}
 
 	/**
-	 * Opens the specified URL using the specified cookies list
+	 * Opens the specified URL using the specified cookies list.
 	 * 
 	 * @param url
 	 *            the URL you want to open
 	 * @param cookieNamesValues
 	 *            the cookies list you want to pass
 	 */
-	public void goToUrlWithCookies(String url,
-			Map<String, String> cookieNamesValues) {
+	public void goToUrlWithCookies(final String url,
+			final Map<String, String> cookieNamesValues) {
 		LOG.info("Getting: " + url + " with cookies: " + cookieNamesValues);
-		driver.get(url + "/404.html");// this should display 404 not found
+		driver.get(url + "/404.html"); // this should display 404 not found
 		driver.manage().deleteAllCookies();
-		Set<String> cookieNames = cookieNamesValues.keySet();
-		for (String cookieName : cookieNames) {
-			String cookieValue = cookieNamesValues.get(cookieName);
-			driver.manage().addCookie(new Cookie(cookieName, cookieValue));
+
+		Set<Entry<String, String>> entries = cookieNamesValues.entrySet();
+		for (Entry<String, String> cookieEntry : entries) {
+			driver.manage().addCookie(
+					new Cookie(cookieEntry.getKey(), cookieEntry.getValue()));
 		}
 		driver.get(url);
 	}
 
 	/**
 	 * Returns the contents of the table as a list. Each item in the list
-	 * contains a table row
+	 * contains a table row.
 	 * 
 	 * @param tableBy
 	 *            the method of identifying the table
 	 * @return a list containing all the items within the table
 	 */
-	public List<List<String>> getTableAsList(By tableBy) {
+	public List<List<String>> getTableAsList(final By tableBy) {
 		List<List<String>> all = new ArrayList<List<String>>();
 		WebElement table = driver.findElement(tableBy);
 
@@ -810,7 +840,7 @@ public class WebDriverHelper {
 	}
 
 	/**
-	 * Returns the values for a specific column from a HTML table
+	 * Returns the values for a specific column from a HTML table.
 	 * 
 	 * @param tableBy
 	 *            the way to identify the table
@@ -818,7 +848,7 @@ public class WebDriverHelper {
 	 *            the column number
 	 * @return a list with all the values corresponding to the specified column
 	 */
-	public List<String> getTableColumn(By tableBy, int columnNumber) {
+	public List<String> getTableColumn(final By tableBy, final int columnNumber) {
 		List<String> result = new ArrayList<String>();
 		List<List<String>> table = this.getTableAsList(tableBy);
 
@@ -829,39 +859,63 @@ public class WebDriverHelper {
 	}
 
 	/**
-	 * Builder class used to create WebDriver instances
+	 * Builder class used to create WebDriver instances.
 	 * 
 	 * @author ludovicianul
 	 * 
 	 */
-	public static class Builder {
-		private String userAgent;// yes
-		private boolean jsEnabled = true;// yes
-		private String proxyHost;// yes
-		private String proxyPort;// yes
-		private String noProxyFor;// yes
-		private boolean acceptAllCertificates;// yes
+	public static final class Builder {
+
+		/**
+		 * the user agent.
+		 */
+		private String userAgent;
+
+		/**
+		 * Javascript status.
+		 */
+		private boolean jsEnabled = true;
+		/**
+		 * The proxy host used if any.
+		 */
+		private String proxyHost;
+		/**
+		 * The proxy port used if any.
+		 */
+		private String proxyPort;
+
+		/**
+		 * Proxy bypass.
+		 */
+		private String noProxyFor;
+		/**
+		 * How to deal with certificates.
+		 */
+		private boolean acceptAllCertificates;
+		/**
+		 * 
+		 */
 		private boolean assumeAllCertsUntrusted;
-		private String browser;// yes
-		private String browserVersion;// yes
-		private String platform;// yes
-		private String runMode = Constants.RunMode.NORMAL;// yes
-		private String gridUrl;// yes
+		private String browser;
+		private String browserVersion;
+		private String platform;
+		private String runMode = Constants.RunMode.NORMAL;
+		private String gridUrl;
 		private String browserPackage;
 		private boolean flakinessForIe;
 		private String profileLocation;
 
-		public Builder flackinessForIe(boolean flackiness) {
+		public Builder flackinessForIe(final boolean flackiness) {
 			this.flakinessForIe = flackiness;
 			return this;
 		}
 
-		public Builder grid(String gridUrl) {
-			this.gridUrl = gridUrl;
+		public Builder grid(final String gridURL) {
+			this.gridUrl = gridURL;
 			return this;
 		}
 
-		public Builder browser(String b) {
+		public Builder browser(final String b) {
 			this.browser = b;
 			if (b.startsWith("internet")) {
 				browserPackage = "ie";
@@ -871,51 +925,51 @@ public class WebDriverHelper {
 			return this;
 		}
 
-		public Builder browserVersion(String v) {
+		public Builder browserVersion(final String v) {
 			this.browserVersion = v;
 			return this;
 		}
 
-		public Builder platform(String p) {
+		public Builder platform(final String p) {
 			this.platform = p;
 			return this;
 		}
 
-		public Builder runMode(String r) {
+		public Builder runMode(final String r) {
 			this.runMode = r;
 			return this;
 		}
 
-		public Builder proxy(String proxyHost, String proxyPort,
-				String noProxyFor) {
-			this.proxyHost = proxyHost;
-			this.proxyPort = proxyPort;
-			this.noProxyFor = noProxyFor;
+		public Builder proxy(final String prxyHost, final String prxyPort,
+				final String noPrxyFor) {
+			this.proxyHost = prxyHost;
+			this.proxyPort = prxyPort;
+			this.noProxyFor = noPrxyFor;
 			return this;
 		}
 
-		public Builder userAgent(String ua) {
+		public Builder userAgent(final String ua) {
 			this.userAgent = ua;
 			return this;
 		}
 
-		public Builder jsEnabled(boolean jsEnabled) {
-			this.jsEnabled = jsEnabled;
+		public Builder jsEnabled(final boolean jsOn) {
+			this.jsEnabled = jsOn;
 			return this;
 		}
 
-		public Builder acceptAllCerts(boolean acceptAllCerts) {
+		public Builder acceptAllCerts(final boolean acceptAllCerts) {
 			this.acceptAllCertificates = acceptAllCerts;
 			return this;
 		}
 
-		public Builder assumeAllCertsUtrusted(boolean assume) {
+		public Builder assumeAllCertsUtrusted(final boolean assume) {
 			this.assumeAllCertsUntrusted = assume;
 			return this;
 		}
 
-		public Builder profileLocation(String profileLocation) {
-			this.profileLocation = profileLocation;
+		public Builder profileLocation(final String ffProfileLocation) {
+			this.profileLocation = ffProfileLocation;
 			return this;
 		}
 
@@ -935,7 +989,7 @@ public class WebDriverHelper {
 
 		/**
 		 * Creates a new WebDriver instance based on the properties supplied to
-		 * the Builder
+		 * the Builder.
 		 * 
 		 * @return a fully configured WebDriver instance
 		 */

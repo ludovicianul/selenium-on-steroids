@@ -298,7 +298,7 @@
 				<artifactId>maven-checkstyle-plugin</artifactId>
 				<version>${checkstyle.version}</version>
 				<configuration>
-					<configLocation>sun_checks.xml</configLocation>
+					<configLocation>my_checks.xml</configLocation>
 					<outputFileFormat>xml</outputFileFormat>
 				</configuration>
 				<reportSets>

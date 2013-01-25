@@ -11,45 +11,60 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 
 /**
  * This class offers utility method to interact with the Database. Further
- * methods will be add in the near future
+ * methods will be add in the near future. If you are dealing with mutiple
+ * Database types you must create multiple DBUtils instances.
  * 
  * @author ludovicianul
  * 
  */
 public final class DBUtils {
 
+	/**
+	 * The DB string used by JDBC to connect to the database.
+	 */
 	private String dbString;
-	private String driverClass;
+
+	/**
+	 * The username used to connect to the database.
+	 */
 	private String usr;
+
+	/**
+	 * The password used to connect to the database.
+	 */
 	private String pwd;
+
+	/**
+	 * The logger for this class.
+	 */
 	private static final Logger LOG = Logger.getLogger(DBUtils.class);
 
 	/**
 	 * This will throw a {@link ClassNotFoundException} if the Driver class is
-	 * not found
+	 * not found.
 	 * 
 	 * @param driverClass
 	 *            the fully qualified driver class
-	 * @param dbString
+	 * @param dbStr
 	 *            the DB string used to connect to the database; please remember
 	 *            that each DB has its own connection string
-	 * @param usr
+	 * @param user
 	 *            the username used to connect to the DB
-	 * @param pwd
+	 * @param password
 	 *            the username password used to connect to the DB
 	 * @throws ClassNotFoundException
+	 *             if the required JDBC jar file is not in the classpath
 	 */
-	public DBUtils(String driverClass, String dbString, String usr, String pwd)
+	public DBUtils(final String driverClass, final String dbStr,
+			final String user, final String password)
 			throws ClassNotFoundException {
-		this.dbString = dbString;
-		this.driverClass = driverClass;
-		this.usr = usr;
-		this.pwd = pwd;
+		this.dbString = dbStr;
+		this.usr = user;
+		this.pwd = password;
 
 		Class.forName(driverClass);
 	}
@@ -57,14 +72,15 @@ public final class DBUtils {
 	/**
 	 * Runs a select query against the DB and get the results in a list of
 	 * lists. Each item in the list will be a list of items corresponding to a
-	 * row returned by the select
+	 * row returned by the select.
 	 * 
 	 * @param sql
 	 *            a SELECT sql that will be executed
 	 * @return a list with the result from the DB
 	 * @throws SQLException
+	 *             if something goes wrong while accessing the Database
 	 */
-	public List<List<String>> doSelect(String sql) throws SQLException {
+	public List<List<String>> doSelect(final String sql) throws SQLException {
 		List<List<String>> results = new ArrayList<List<String>>();
 		LOG.info("Connecting to: " + this.dbString + " with " + this.usr
 				+ " and " + this.pwd);
@@ -78,6 +94,7 @@ public final class DBUtils {
 
 			st = connection.createStatement();
 			rs = st.executeQuery(sql);
+			st.closeOnCompletion();
 
 			while (rs.next()) {
 				ResultSetMetaData meta = rs.getMetaData();
@@ -88,6 +105,7 @@ public final class DBUtils {
 				}
 				results.add(lines);
 			}
+
 		} finally {
 			if (rs != null) {
 				rs.close();
@@ -107,7 +125,7 @@ public final class DBUtils {
 
 	/**
 	 * Returns all the values corresponding to a specific column returned by
-	 * executing the supplied sql
+	 * executing the supplied sql.
 	 * 
 	 * @param columnNumber
 	 *            the column number to be returned
@@ -116,9 +134,10 @@ public final class DBUtils {
 	 * @return a list with all the values corresponding to the supplied column
 	 *         number
 	 * @throws SQLException
+	 *             if something goes wrong while accessing the Database
 	 */
-	public List<String> getValuesOfColumn(int columnNumber, String sqlQuery)
-			throws SQLException {
+	public List<String> getValuesOfColumn(final int columnNumber,
+			final String sqlQuery) throws SQLException {
 		LOG.info("Connecting to: " + this.dbString + " with " + this.usr
 				+ " and " + this.pwd);
 		LOG.info("Executing: " + sqlQuery);
@@ -134,11 +153,12 @@ public final class DBUtils {
 
 	/**
 	 * This method can execute any of the following statements: INSERT, DELETE,
-	 * UPDATE
+	 * UPDATE.
 	 * 
 	 * @param sql
 	 *            the sql to be executed
 	 * @throws SQLException
+	 *             if something goes wrong while accessing the Database
 	 */
 	public void doSQL(final String sql) throws SQLException {
 
@@ -169,11 +189,14 @@ public final class DBUtils {
 
 	/**
 	 * This method returns approapiate query clauses to be executed within a SQL
-	 * statement
+	 * statement.
 	 * 
 	 * @param params
 	 *            the list of parameters - name value
 	 * @param orderParams
+	 *            the name of the parameters that will be used to sort the
+	 *            result and also the sorting order. Each entry will be (column,
+	 *            sortingOrder).
 	 * @return the where and order by clause for a SQL statement
 	 */
 	private String getQueryClauses(final Map<String, Object> params,
@@ -248,6 +271,7 @@ public final class DBUtils {
 	 *            the order by params if needed in the format (name, asc/desc)
 	 * @return a list containing each row from the SELECT in a list
 	 * @throws SQLException
+	 *             if something goes wrong while accessing the Database
 	 */
 	public List<List<String>> doSelectWithParams(final String sql,
 			final Map<String, Object> params,

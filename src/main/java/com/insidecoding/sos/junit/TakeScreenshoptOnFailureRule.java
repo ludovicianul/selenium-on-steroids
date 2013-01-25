@@ -16,34 +16,68 @@ import com.google.common.io.Files;
 
 /**
  * This is a test rule used by the JUNIT framework and WebDriver to take
- * screenshots on failure
+ * screenshots on failure.
  * 
  * @author ludovicianul
  * 
  */
-public class TakeScreenshoptOnFailureRule implements TestRule {
+public final class TakeScreenshoptOnFailureRule implements TestRule {
 
+	/**
+	 * flag for taking screenshots.
+	 */
 	private boolean takeScreenshot;
+
+	/**
+	 * the WebDriver instance.
+	 */
 	private WebDriver driver;
+
+	/**
+	 * the folder where the screenshots will be saved.
+	 */
 	private File directory;
+
+	/**
+	 * the logger.
+	 */
 	private static final Logger LOG = Logger
 			.getLogger(TakeScreenshoptOnFailureRule.class);
 
-	public void setScreenshotFolder(File folder) {
+	/**
+	 * Set the folder where we save screenshots.
+	 * 
+	 * @param folder
+	 *            the folder
+	 */
+	public void setScreenshotFolder(final File folder) {
 		this.directory = folder;
-		directory.mkdirs();
-	}
-
-	public void setTakeScreenshot(boolean takeScreenshot) {
-		this.takeScreenshot = takeScreenshot;
-	}
-
-	public void setDriver(WebDriver driver) {
-		this.driver = driver;
+		boolean created = directory.mkdirs();
+		LOG.info("Screenshot folder created succsessfully: " + created);
 	}
 
 	/**
-	 * You must supply the folder where the screenshots will be stored in
+	 * Enables the ability to take screenshots.
+	 * 
+	 * @param takeScrshot
+	 *            true if you want to take screenshots and false otherwise
+	 */
+	public void setTakeScreenshot(final boolean takeScrshot) {
+		this.takeScreenshot = takeScrshot;
+	}
+
+	/**
+	 * Sets the WebDriver instance.
+	 * 
+	 * @param drv
+	 *            the WebDriver instance
+	 */
+	public void setDriver(final WebDriver drv) {
+		this.driver = drv;
+	}
+
+	/**
+	 * You must supply the folder where the screenshots will be stored in.
 	 * 
 	 * @param directory
 	 */
@@ -84,13 +118,13 @@ public class TakeScreenshoptOnFailureRule implements TestRule {
 	}
 
 	/**
-	 * Gets the name of the image file with the screenshot
+	 * Gets the name of the image file with the screenshot.
 	 * 
 	 * @param method
 	 *            - the method name
 	 * @return the file that will cotain the screenshot
 	 */
-	private File filenameFor(Description method) {
+	private File filenameFor(final Description method) {
 		String className = method.getClassName();
 		String methodName = method.getMethodName();
 
@@ -99,12 +133,12 @@ public class TakeScreenshoptOnFailureRule implements TestRule {
 
 	/**
 	 * Saves the actual screenshot without interrupting the running of the
-	 * tests. It will log an error if unable to store take the screenshot
+	 * tests. It will log an error if unable to store take the screenshot.
 	 * 
 	 * @param file
-	 *            - the file that will store the screenshot
+	 *            the file that will store the screenshot
 	 */
-	private void silentlySaveScreenshotTo(File file) {
+	private void silentlySaveScreenshotTo(final File file) {
 		try {
 			saveScreenshotTo(file);
 			LOG.debug("Screenshot saved: " + file.getAbsolutePath());
@@ -115,11 +149,14 @@ public class TakeScreenshoptOnFailureRule implements TestRule {
 	}
 
 	/**
+	 * Saves the screenshot to the file.
 	 * 
 	 * @param file
+	 *            the file where to save the screenshot
 	 * @throws IOException
+	 *             if something goes wrong while saving
 	 */
-	private void saveScreenshotTo(File file) throws IOException {
+	private void saveScreenshotTo(final File file) throws IOException {
 		byte[] bytes = null;
 		try {
 			bytes = ((TakesScreenshot) driver)
