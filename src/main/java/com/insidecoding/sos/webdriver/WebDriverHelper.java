@@ -11,6 +11,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 
+import junit.framework.Assert;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
@@ -185,6 +187,89 @@ public final class WebDriverHelper {
 
 		LOG.info("Checkbox: " + element + " is NOT checked!");
 		return false;
+	}
+
+	/**
+	 * Checks if the given cookie name exists in the current session. This
+	 * method is also logging the result. The match is CASE SENSITIVE. Please
+	 * not that the method will do a JUNIT Assert causing the test to fail.
+	 * 
+	 * @param cookieName
+	 *            the name of the cookie
+	 * 
+	 */
+	public void assertCookiePresentByName(final String cookieName) {
+		Set<Cookie> cookies = driver.manage().getCookies();
+
+		for (Cookie cookie : cookies) {
+			if (cookie.getName().equals(cookieName)) {
+				LOG.info("Cookie: " + cookieName + " was found with value: "
+						+ cookie.getValue());
+				Assert.assertEquals(cookieName, cookie.getName());
+				return;
+			}
+		}
+		Assert.fail("The given cookie name: " + cookieName
+				+ " is not present within the current session!");
+	}
+
+	/**
+	 * Verifies that the given cookie name has the given cookie value. This
+	 * method is also add logging info. Please not that the method will do a
+	 * JUNIT Assert causing the test to fail.
+	 * 
+	 * @param cookieName
+	 *            the cookie name
+	 * @param cookieValue
+	 *            the cookie value
+	 */
+	public void assertCookie(final String cookieName, final String cookieValue) {
+		Set<Cookie> cookies = driver.manage().getCookies();
+
+		for (Cookie cookie : cookies) {
+			if (cookie.getName().equals(cookieName)
+					&& cookie.getValue().equals(cookieValue)) {
+				LOG.info("Cookie: " + cookieName + " was found with value: "
+						+ cookie.getValue());
+				return;
+			}
+		}
+
+		Assert.fail("Cookie: " + cookieName + " with value: " + cookieValue
+				+ " NOT found!");
+
+	}
+
+	/**
+	 * Verifies that the given element contains the given text. Please not that
+	 * the method will do a JUNIT Assert causing the test to fail.
+	 * 
+	 * @param by
+	 *            the method of identifying the element
+	 * @param text
+	 *            the text to be matched
+	 */
+	public void assertText(final By by, final String text) {
+		WebElement element = driver.findElement(by);
+
+		Assert.assertEquals("Element: " + element
+				+ " does NOT contain the given text: " + text, text,
+				element.getText());
+	}
+
+	/**
+	 * Verifies that the given checkbox is checked. Please not that the method
+	 * will do a JUNIT Assert causing the test to fail.
+	 * 
+	 * @param checkboxBy
+	 *            the method of identifying the checkbox
+	 * 
+	 */
+	public void assertChecked(final By checkboxBy) {
+		WebElement element = driver.findElement(checkboxBy);
+
+		Assert.assertTrue("Checkbox: " + element + " is NOT checked!",
+				element.isSelected());
 	}
 
 	/**

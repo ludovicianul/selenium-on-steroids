@@ -9,7 +9,7 @@ public class AbstractSosVerifier extends AbstractSoSBase {
 	public void testCheckbox() throws Exception {
 		driver.get("http://www.w3schools.com/html/tryit.asp?filename=tryhtml_checkbox");
 		driver.switchTo().frame("view");
-		helper.verifyChecked(By.name("vehicle"));
+		helper.assertChecked(By.name("vehicle"));
 	}
 
 	@Override
