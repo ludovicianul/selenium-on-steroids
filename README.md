@@ -21,6 +21,8 @@ Features
 * Easily control different WebDriver instances and configuration through properties
 * Get screenshots when Selenium tests are failing
 
+In order to get the most out of Selenium on Steriods you must write your Selenium tests using the JUnit framework.
+
 Getting started
 ===============
 <https://github.com/ludovicianul/selenium-on-steroids/wiki/getting-started>
