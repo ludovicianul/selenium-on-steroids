@@ -53,6 +53,17 @@ public final class HttpCallUtils {
 	}
 
 	/**
+	 * Creates a new HttpCallUtils instance based on a existing FileUtils
+	 * instance.
+	 * 
+	 * @param fu
+	 *            existing FileUtil instance
+	 */
+	public HttpCallUtils(final FileUtils fu) {
+		this.fileUtil = fu;
+	}
+
+	/**
 	 * 
 	 * Sends a string to a URL. This is very helpful when SOAP web services are
 	 * involved or you just want to post a XML message to a URL.

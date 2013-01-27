@@ -92,7 +92,103 @@ public final class WebDriverHelper {
 	}
 
 	/**
-	 * Check if the specified element is present into the page.
+	 * Checks if the given cookie name exists in the current session. This
+	 * method is also logging the result. The match is CASE SENSITIVE.
+	 * 
+	 * @param cookieName
+	 *            the name of the cookie
+	 * @return true if the cookie exists or false otherwise
+	 */
+	public boolean verifyCookiePresentByName(final String cookieName) {
+		Set<Cookie> cookies = driver.manage().getCookies();
+
+		for (Cookie cookie : cookies) {
+			if (cookie.getName().equals(cookieName)) {
+				LOG.info("Cookie: " + cookieName + " was found with value: "
+						+ cookie.getValue());
+				return true;
+			}
+		}
+
+		LOG.info("Cookie: " + cookieName + " NOT found!");
+		return false;
+	}
+
+	/**
+	 * Verifies that the given cookie name has the given cookie value. This
+	 * method is also add logging info.
+	 * 
+	 * @param cookieName
+	 *            the cookie name
+	 * @param cookieValue
+	 *            the cookie value
+	 * @return true if the given cookie name exists and its value matches the
+	 *         given cookie value; false otherwise
+	 */
+	public boolean verifyCookie(final String cookieName,
+			final String cookieValue) {
+		Set<Cookie> cookies = driver.manage().getCookies();
+
+		for (Cookie cookie : cookies) {
+			if (cookie.getName().equals(cookieName)
+					&& cookie.getValue().equals(cookieValue)) {
+				LOG.info("Cookie: " + cookieName + " was found with value: "
+						+ cookie.getValue());
+				return true;
+			}
+		}
+
+		LOG.info("Cookie: " + cookieName + " with value: " + cookieValue
+				+ " NOT found!");
+		return false;
+	}
+
+	/**
+	 * Verifies that the given element contains the given text.
+	 * 
+	 * @param by
+	 *            the method of identifying the element
+	 * @param text
+	 *            the text to be matched
+	 * @return true if the given element contains the given text or false
+	 *         otherwise
+	 */
+	public boolean verifyText(final By by, final String text) {
+		WebElement element = driver.findElement(by);
+
+		if (element.getText().equals(text)) {
+			LOG.info("Element: " + element + " contains the given text: "
+					+ text);
+			return true;
+		}
+
+		LOG.info("Element: " + element + " does NOT contain the given text: "
+				+ text);
+
+		return false;
+	}
+
+	/**
+	 * Verifies that the given checkbox is checked.
+	 * 
+	 * @param checkboxBy
+	 *            the method of identifying the checkbox
+	 * @return true if the given checkbox is checked or false otherwise
+	 */
+	public boolean verifyChecked(final By checkboxBy) {
+		WebElement element = driver.findElement(checkboxBy);
+
+		if (element.isSelected()) {
+			LOG.info("Checkbox: " + element + " is checked!");
+			return true;
+		}
+
+		LOG.info("Checkbox: " + element + " is NOT checked!");
+		return false;
+	}
+
+	/**
+	 * Checks if the specified element is present into the page.
 	 * 
 	 * @param by
 	 *            method of identifying the element
@@ -108,8 +204,8 @@ public final class WebDriverHelper {
 	}
 
 	/**
-	 * Checks if the suplied {@code element} contains another element identified
-	 * by {@code by}.
+	 * Checks if the supplied {@code element} contains another element
+	 * identified by {@code by}.
 	 * 
 	 * @param by
 	 *            the method of identifying the element
