@@ -1,12 +1,12 @@
-Selenium on Steroids
-====================
-The projects targets QA automation engineers that want a clean and simple way of creating Selenium tests 
-allowing them to focus more on designing the test rather than dealing with technical dificulties. 
-Using Maven profiles the instantiation of a WebDriver object with different kind of settings reduces to a simple
-setting of some predefined properties.
-The project enhances the functionality of the WebDriver by offering additional methods for common tasks.
-You have also available different utility methods in order to interact with simple files, properties files,
-Excel documents, XML documents, Databases, post XML calls, etc, basically everything you need for your data driven scenarios.
+Selenium on Steroids (SoS)
+==========================
+The projects targets QA automation engineers that want a clean and simple way to create Selenium tests 
+allowing them to focus more on designing the tests rather than dealing with technical dificulties. 
+Using Maven profiles the instantiation of a WebDriver objects with different kind of configuraions reduces to just
+setting some predefined properties. 
+The project enhances the functionality of the WebDriver API by offering additional methods for common tasks, having as a long run target to implement most of the Selenium IDE functions.
+SoS also offers different utility methods in order to interact with simple files, properties files,
+Excel documents, XML documents, Databases, post XML calls over HTTP, etc. Basically everything you need for your data driven testing scenarios.
 
 Features
 ========
