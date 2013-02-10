@@ -86,6 +86,16 @@ public class TestFileUtils {
 	}
 
 	@Test
+	public void testLoadPropertiesInexistentKeys() throws Exception {
+		FileUtils utils = new FileUtils("files");
+
+		Assert.assertNull(utils.getPropertyAsString("inexistent"));
+		Assert.assertNull(utils.getPropertyAsBoolean("inexistent"));
+
+		Assert.assertEquals(utils.getPropertyAsInteger("in"), -1);
+	}
+
+	@Test
 	public void testLoadPropertiesFromCustomLocation() throws Exception {
 		FileUtils utils = new FileUtils("files");
 		Assert.assertNotNull(utils.getBundle("middleEarth"));

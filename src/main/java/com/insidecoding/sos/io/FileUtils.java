@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
@@ -207,13 +208,13 @@ public final class FileUtils {
 	public Boolean getPropertyAsBoolean(final String key) {
 		LOG.info("Getting value for key: " + key);
 		for (ResourceBundle bundle : bundles.values()) {
-
-			if (bundle.getString(key) != null) {
+			try {
 				return Boolean.valueOf(bundle.getString(key));
+			} catch (MissingResourceException e) {
+				// ignore it
 			}
-
 		}
-		return Boolean.FALSE;
+		return null;
 	}
 
 	/**
@@ -233,8 +234,13 @@ public final class FileUtils {
 		LOG.info("Getting value for key: " + key + " from bundle name: "
 				+ bundleName);
 		ResourceBundle bundle = bundles.get(bundleName);
-
-		return Boolean.valueOf(bundle.getString(key));
+		Boolean result = null;
+		try {
+			result = Boolean.valueOf(bundle.getString(key));
+		} catch (MissingResourceException e) {
+			// ignore it
+		}
+		return result;
 	}
 
 	/**
@@ -251,11 +257,11 @@ public final class FileUtils {
 	public String getPropertyAsString(final String key) {
 		LOG.info("Getting value for key: " + key);
 		for (ResourceBundle bundle : bundles.values()) {
-
-			if (bundle.getString(key) != null) {
+			try {
 				return bundle.getString(key);
+			} catch (MissingResourceException e) {
+				// ignore it
 			}
-
 		}
 		return null;
 	}
@@ -275,8 +281,13 @@ public final class FileUtils {
 	public String getPropertyAsString(final String bundleName, final String key) {
 		LOG.info("Getting value for key: " + key + " bundleName:" + bundleName);
 		ResourceBundle bundle = bundles.get(bundleName);
-
-		return bundle.getString(key);
+		String result = null;
+		try {
+			result = bundle.getString(key);
+		} catch (MissingResourceException e) {
+			// ignore it
+		}
+		return result;
 	}
 
 	/**
@@ -293,16 +304,18 @@ public final class FileUtils {
 	 */
 	public int getPropertyAsInteger(final String key) {
 		LOG.info("Getting value for key: " + key);
+		int result = -1;
 		for (ResourceBundle bundle : bundles.values()) {
 			try {
-				if (bundle.getString(key) != null) {
-					return Integer.parseInt(bundle.getString(key));
-				}
+				result = Integer.parseInt(bundle.getString(key));
+				break;
+			} catch (MissingResourceException e) {
+				// ignore it
 			} catch (NumberFormatException e) {
-				return -1;
+				result = -1;
 			}
 		}
-		return -1;
+		return result;
 	}
 
 	/**
@@ -322,11 +335,11 @@ public final class FileUtils {
 				+ bundleName);
 		ResourceBundle bundle = bundles.get(bundleName);
 		try {
-			if (bundle.getString(key) != null) {
-				return Integer.parseInt(bundle.getString(key));
-			}
+			return Integer.parseInt(bundle.getString(key));
+		} catch (MissingResourceException e) {
+			// ignore it
 		} catch (NumberFormatException e) {
-			return -1;
+			// ignore it
 		}
 
 		return -1;
@@ -346,16 +359,18 @@ public final class FileUtils {
 	 */
 	public double getPropertyAsDouble(final String key) {
 		LOG.info("Getting value for key: " + key);
+		double result = -1d;
 		for (ResourceBundle bundle : bundles.values()) {
 			try {
-				if (bundle.getString(key) != null) {
-					return Double.parseDouble(bundle.getString(key));
-				}
+				result = Double.parseDouble(bundle.getString(key));
+				break;
+			} catch (MissingResourceException e) {
+				// ignore it
 			} catch (NumberFormatException e) {
-				return -1;
+				result = -1d;
 			}
 		}
-		return -1;
+		return result;
 	}
 
 	/**
@@ -375,13 +390,13 @@ public final class FileUtils {
 				+ bundleName);
 		ResourceBundle bundle = bundles.get(bundleName);
 		try {
-			if (bundle.getString(key) != null) {
-				return Double.parseDouble(bundle.getString(key));
-			}
+			return Double.parseDouble(bundle.getString(key));
+		} catch (MissingResourceException e) {
+			// ignore it
 		} catch (NumberFormatException e) {
-			return -1;
+			// ignore it;
 		}
-		return -1;
+		return -1d;
 	}
 
 	/**
@@ -406,9 +421,9 @@ public final class FileUtils {
 		LOG.info("Reading from file: " + fileName + " sheet: " + sheetName
 				+ " rowNumber: " + rowNumber + " cellNumber:" + cellNumber);
 		Workbook workbook = getWorkbook(fileName);
-		Sheet payments = workbook.getSheet(sheetName);
+		Sheet rows = workbook.getSheet(sheetName);
 
-		Row row = payments.getRow(rowNumber);
+		Row row = rows.getRow(rowNumber);
 		Cell cell = row.getCell(cellNumber);
 		String result = null;
 		switch (cell.getCellType()) {
@@ -479,8 +494,8 @@ public final class FileUtils {
 		LOG.info("Getting the number of rows from:" + fileName + " sheet: "
 				+ sheetName);
 		Workbook workbook = getWorkbook(fileName);
-		Sheet payments = workbook.getSheet(sheetName);
-		return payments.getPhysicalNumberOfRows();
+		Sheet sheets = workbook.getSheet(sheetName);
+		return sheets.getPhysicalNumberOfRows();
 	}
 
 	/**
