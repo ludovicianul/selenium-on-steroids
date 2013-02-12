@@ -211,7 +211,7 @@ public final class FileUtils {
 			try {
 				return Boolean.valueOf(bundle.getString(key));
 			} catch (MissingResourceException e) {
-				// ignore it
+				LOG.info("Resource: " + key + " not found!");
 			}
 		}
 		return null;
@@ -238,7 +238,7 @@ public final class FileUtils {
 		try {
 			result = Boolean.valueOf(bundle.getString(key));
 		} catch (MissingResourceException e) {
-			// ignore it
+			LOG.info("Resource: " + key + " not found!");
 		}
 		return result;
 	}
@@ -260,7 +260,7 @@ public final class FileUtils {
 			try {
 				return bundle.getString(key);
 			} catch (MissingResourceException e) {
-				// ignore it
+				LOG.info("Resource: " + key + " not found!");
 			}
 		}
 		return null;
@@ -285,7 +285,7 @@ public final class FileUtils {
 		try {
 			result = bundle.getString(key);
 		} catch (MissingResourceException e) {
-			// ignore it
+			LOG.info("Resource: " + key + " not found!");
 		}
 		return result;
 	}
@@ -310,7 +310,7 @@ public final class FileUtils {
 				result = Integer.parseInt(bundle.getString(key));
 				break;
 			} catch (MissingResourceException e) {
-				// ignore it
+				LOG.info("Resource: " + key + " not found!");
 			} catch (NumberFormatException e) {
 				result = -1;
 			}
@@ -337,9 +337,9 @@ public final class FileUtils {
 		try {
 			return Integer.parseInt(bundle.getString(key));
 		} catch (MissingResourceException e) {
-			// ignore it
+			LOG.info("Resource: " + key + " not found!");
 		} catch (NumberFormatException e) {
-			// ignore it
+			return -1;
 		}
 
 		return -1;
@@ -365,7 +365,7 @@ public final class FileUtils {
 				result = Double.parseDouble(bundle.getString(key));
 				break;
 			} catch (MissingResourceException e) {
-				// ignore it
+				LOG.info("Resource: " + key + " not found!");
 			} catch (NumberFormatException e) {
 				result = -1d;
 			}
@@ -392,9 +392,9 @@ public final class FileUtils {
 		try {
 			return Double.parseDouble(bundle.getString(key));
 		} catch (MissingResourceException e) {
-			// ignore it
+			LOG.info("Resource: " + key + " not found!");
 		} catch (NumberFormatException e) {
-			// ignore it;
+			return -1d;
 		}
 		return -1d;
 	}

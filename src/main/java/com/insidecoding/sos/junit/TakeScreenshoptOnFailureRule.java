@@ -121,7 +121,7 @@ public final class TakeScreenshoptOnFailureRule implements TestRule {
 	 * Gets the name of the image file with the screenshot.
 	 * 
 	 * @param method
-	 *            - the method name
+	 *            the method name
 	 * @return the file that will cotain the screenshot
 	 */
 	private File filenameFor(final Description method) {
@@ -141,7 +141,7 @@ public final class TakeScreenshoptOnFailureRule implements TestRule {
 	private void silentlySaveScreenshotTo(final File file) {
 		try {
 			saveScreenshotTo(file);
-			LOG.debug("Screenshot saved: " + file.getAbsolutePath());
+			LOG.info("Screenshot saved: " + file.getAbsolutePath());
 		} catch (Exception e) {
 			LOG.warn("Error while taking screenshot " + file.getName() + ": "
 					+ e);

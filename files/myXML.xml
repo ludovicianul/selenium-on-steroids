@@ -1,0 +1,10 @@
+<root>
+	<name>John</name>
+	<age>24</age>
+	<occupation>
+		<name>Engineer</name>
+	</occupation>
+	<occupation>
+		<name>Father</name>
+	</occupation>
+</root>

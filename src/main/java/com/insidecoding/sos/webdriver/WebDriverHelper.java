@@ -73,6 +73,25 @@ public final class WebDriverHelper {
 	}
 
 	/**
+	 * Refreshes the current page pressing CTRL + F5
+	 */
+	public void clearCache() {
+		// TODO
+	}
+
+	/**
+	 * Scrolls the page to the specified coordinates
+	 * 
+	 * @param x
+	 *            the X coordinate
+	 * @param y
+	 *            the Y coordinate
+	 */
+	public void scrollTo(int x, int y) {
+		// TODO
+	}
+
+	/**
 	 * Call this method before using the driver into another window. Remember to
 	 * call {@link WebDriverHelper.#dswitchBackToMainWindow()} when you want to
 	 * return to the main window.

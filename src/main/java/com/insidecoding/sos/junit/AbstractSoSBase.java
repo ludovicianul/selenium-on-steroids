@@ -1,5 +1,7 @@
 package com.insidecoding.sos.junit;
 
+import java.io.File;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.junit.After;
@@ -55,29 +57,39 @@ public abstract class AbstractSoSBase {
 		fileUtil = new FileUtils();
 		fileUtil.loadPropertiesBundle("selenium");
 
-		String browserName = fileUtil.getPropertyAsString("browser");
-		String browserVersion = fileUtil.getPropertyAsString("browserVersion");
-		String runMode = fileUtil.getPropertyAsString("runMode");
-		String proxyHost = fileUtil.getPropertyAsString("proxyHost");
-		String proxyPort = fileUtil.getPropertyAsString("proxyPort");
-		String gridUrl = fileUtil.getPropertyAsString("gridUrl");
-		String platform = fileUtil.getPropertyAsString("platform");
-		String userAgent = fileUtil.getPropertyAsString("userAgent");
-		String noProxyFor = fileUtil.getPropertyAsString("noProxyFor");
-		String screenShotFolder = fileUtil
-				.getPropertyAsString("screenshotFolder");
+		String browserName = fileUtil
+				.getPropertyAsString("selenium", "browser");
+		String browserVersion = fileUtil.getPropertyAsString("selenium",
+				"browserVersion");
+		String runMode = fileUtil.getPropertyAsString("selenium", "runMode");
+		String proxyHost = fileUtil
+				.getPropertyAsString("selenium", "proxyHost");
+		String proxyPort = fileUtil
+				.getPropertyAsString("selenium", "proxyPort");
+		String gridUrl = fileUtil.getPropertyAsString("selenium", "gridUrl");
+		String platform = fileUtil.getPropertyAsString("selenium", "platform");
+		String userAgent = fileUtil
+				.getPropertyAsString("selenium", "userAgent");
+		String noProxyFor = fileUtil.getPropertyAsString("selenium",
+				"noProxyFor");
+		String screenShotFolder = fileUtil.getPropertyAsString("selenium",
+				"screenshotFolder");
 
-		boolean assumeAllCertsUntrusted = fileUtil
-				.getPropertyAsBoolean("assumeAllCertsUntrusted");
-		String jsEnabled = fileUtil.getPropertyAsString("jsEnabled");
-		boolean flakiness = fileUtil.getPropertyAsBoolean("flakiness");
-		boolean acceptAllCerts = fileUtil
-				.getPropertyAsBoolean("acceptAllCerts");
-		String profileLocation = fileUtil.getPropertyAsString("browserProfile");
-		boolean takeScreenshots = fileUtil
-				.getPropertyAsBoolean("takeScreenshots");
+		boolean assumeAllCertsUntrusted = fileUtil.getPropertyAsBoolean(
+				"selenium", "assumeAllCertsUntrusted");
+		String jsEnabled = fileUtil
+				.getPropertyAsString("selenium", "jsEnabled");
+		boolean flakiness = fileUtil.getPropertyAsBoolean("selenium",
+				"flakiness");
+		boolean acceptAllCerts = fileUtil.getPropertyAsBoolean("selenium",
+				"acceptAllCerts");
+		String profileLocation = fileUtil.getPropertyAsString("selenium",
+				"browserProfile");
+		String takeScreenshots = fileUtil.getPropertyAsString("selenium",
+				"takeScreenshots");
 
 		boolean jsEnabledBoolean = Boolean.getBoolean(jsEnabled);
+		boolean takeScreenshotsBoolean = Boolean.getBoolean(takeScreenshots);
 
 		/**
 		 * assign default values if these are null
@@ -125,6 +137,13 @@ public abstract class AbstractSoSBase {
 			jsEnabledBoolean = true;
 		}
 
+		if (isPropertyNotSet(takeScreenshots)) {
+			takeScreenshotsBoolean = true;
+		}
+
+		screen.setTakeScreenshot(takeScreenshotsBoolean);
+		screen.setScreenshotFolder(new File(screenShotFolder));
+
 		WebDriverHelper.Builder driverBuilder = new WebDriverHelper.Builder();
 		driver = driverBuilder.browser(browserName).runMode(runMode)
 				.proxy(proxyHost, proxyPort, noProxyFor)
@@ -138,7 +157,6 @@ public abstract class AbstractSoSBase {
 
 		helper = new WebDriverHelper(driver);
 		screen.setDriver(driver);
-		screen.setTakeScreenshot(takeScreenshots);
 
 		this.doAdditionalSetUp();
 	}
