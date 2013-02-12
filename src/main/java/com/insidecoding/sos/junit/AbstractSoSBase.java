@@ -47,7 +47,7 @@ public abstract class AbstractSoSBase {
 	 * JUNIT Rule used to take screenshots on failure.
 	 */
 	@Rule
-	public TakeScreenshoptOnFailureRule screen = new TakeScreenshoptOnFailureRule();
+	public TakeScreenshotOnFailureRule screen = new TakeScreenshotOnFailureRule();
 
 	/**
 	 * Method called before starting each test.
