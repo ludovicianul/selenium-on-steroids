@@ -202,8 +202,9 @@ public final class FileUtils {
 	 * 
 	 * @param key
 	 *            the key to search for
-	 * @return {@code null} if the property is not found; {@code Boolean.TRUE}
-	 *         if the property is true or {@code Boolean.FALSE} otherwise
+	 * @return {@code Boolean.FALSE} if the property is not found;
+	 *         {@code Boolean.TRUE} if the property is true or
+	 *         {@code Boolean.FALSE} otherwise
 	 */
 	public Boolean getPropertyAsBoolean(final String key) {
 		LOG.info("Getting value for key: " + key);
@@ -214,7 +215,7 @@ public final class FileUtils {
 				LOG.info("Resource: " + key + " not found!");
 			}
 		}
-		return null;
+		return Boolean.FALSE;
 	}
 
 	/**
@@ -226,15 +227,16 @@ public final class FileUtils {
 	 *            the name of the bundle to search in
 	 * @param key
 	 *            the key to search for
-	 * @return {@code null} if the property is not found; {@code Boolean.TRUE}
-	 *         if the property is true or {@code Boolean.FALSE} otherwise
+	 * @return {@code Boolean.FALSE} if the property is not found;
+	 *         {@code Boolean.TRUE} if the property is true or
+	 *         {@code Boolean.FALSE} otherwise
 	 */
 	public Boolean getPropertyAsBoolean(final String bundleName,
 			final String key) {
 		LOG.info("Getting value for key: " + key + " from bundle name: "
 				+ bundleName);
 		ResourceBundle bundle = bundles.get(bundleName);
-		Boolean result = null;
+		Boolean result = Boolean.FALSE;
 		try {
 			result = Boolean.valueOf(bundle.getString(key));
 		} catch (MissingResourceException e) {
@@ -800,11 +802,11 @@ public final class FileUtils {
 		try {
 			reader = new BufferedReader(new InputStreamReader(
 					new FileInputStream(filePath), encoding));
-			String line = null;
-			while ((line = reader.readLine()) != null && i >= lineToStart
-					&& i <= lineToEnd) {
+			String line = reader.readLine();
+			while (line != null && i >= lineToStart && i <= lineToEnd) {
 				result.add(line);
 				i++;
+				line = reader.readLine();
 			}
 		} finally {
 			if (reader != null) {

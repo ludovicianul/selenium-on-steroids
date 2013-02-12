@@ -14,10 +14,6 @@ public class TestGoogle extends AbstractSoSBase {
 
 		WebElement search = driver.findElement(By.name("q"));
 		search.sendKeys("test");
-
-		driver.findElement(By.xpath("//form[@id='search-global']/div[2]"))
-				.click();
-
 	}
 
 	@Override

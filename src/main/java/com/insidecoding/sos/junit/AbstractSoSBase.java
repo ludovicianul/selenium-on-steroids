@@ -187,7 +187,7 @@ public abstract class AbstractSoSBase {
 	protected abstract void doAdditionalTearDown();
 
 	/**
-	 * Checks if the property is empty or is not set
+	 * Checks if the property is empty or is not set.
 	 * 
 	 * @param property
 	 *            the name of the property
