@@ -11,7 +11,9 @@ import org.openqa.selenium.WebDriver;
 
 import com.insidecoding.sos.Constants;
 import com.insidecoding.sos.io.FileUtils;
+import com.insidecoding.sos.net.HttpCallUtils;
 import com.insidecoding.sos.webdriver.WebDriverHelper;
+import com.insidecoding.sos.xml.XMLUtils;
 
 /**
  * This is the base class for all your JUNIT/Selenium tests. By extending this
@@ -34,9 +36,19 @@ public abstract class AbstractSoSBase {
 	protected WebDriverHelper helper;
 
 	/**
-	 * Used to get the selenium proeprties.
+	 * Used to get the selenium properties.
 	 */
 	protected FileUtils fileUtil;
+
+	/**
+	 * Offers XML helper methods.
+	 */
+	protected XMLUtils xmlUtils;
+
+	/**
+	 * Offers HTTP call methods.
+	 */
+	protected HttpCallUtils httpUtils;
 
 	/**
 	 * The Logger for this class.
@@ -55,6 +67,9 @@ public abstract class AbstractSoSBase {
 	@Before
 	public final void setUp() {
 		fileUtil = new FileUtils();
+		xmlUtils = new XMLUtils(fileUtil);
+		httpUtils = new HttpCallUtils(fileUtil);
+
 		fileUtil.loadPropertiesBundle("selenium");
 
 		String browserName = fileUtil
