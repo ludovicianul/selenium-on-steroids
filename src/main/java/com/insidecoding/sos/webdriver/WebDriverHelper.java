@@ -13,11 +13,13 @@ import java.util.logging.Level;
 
 import junit.framework.Assert;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Cookie;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Proxy.ProxyType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -76,7 +78,7 @@ public final class WebDriverHelper {
 	 * Refreshes the current page pressing CTRL + F5
 	 */
 	public void clearCache() {
-		// TODO
+		throw new NotImplementedException();
 	}
 
 	/**
@@ -88,7 +90,27 @@ public final class WebDriverHelper {
 	 *            the Y coordinate
 	 */
 	public void scrollTo(int x, int y) {
-		// TODO
+		((JavascriptExecutor) driver).executeScript("window.scrollTo(" + x
+				+ "," + y + ");");
+	}
+
+	/**
+	 * This method will scroll the page by 250 pixels every 2 seconds for as
+	 * long as {@code numberOfSeconds}.
+	 * 
+	 * @param numberOfSeconds
+	 *            the duration in seconds to scroll
+	 */
+	public void scrollContinuously(int numberOfSeconds) {
+		for (int i = 0; i < numberOfSeconds; i += 2) {
+			((JavascriptExecutor) driver)
+					.executeScript("window.scrollBy(0,250);");
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				LOG.info("Error while scrolling!");
+			}
+		}
 	}
 
 	/**

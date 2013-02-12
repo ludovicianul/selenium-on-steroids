@@ -90,7 +90,7 @@ public class TestFileUtils {
 		FileUtils utils = new FileUtils("files");
 
 		Assert.assertNull(utils.getPropertyAsString("inexistent"));
-		Assert.assertNull(utils.getPropertyAsBoolean("inexistent"));
+		Assert.assertFalse(utils.getPropertyAsBoolean("inexistent"));
 
 		Assert.assertEquals(utils.getPropertyAsInteger("in"), -1);
 	}
