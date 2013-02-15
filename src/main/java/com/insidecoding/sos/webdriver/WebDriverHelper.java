@@ -45,6 +45,11 @@ import com.insidecoding.sos.Constants;
  * 
  */
 public final class WebDriverHelper {
+	
+	/**
+	 * The number of seconds to sleep.
+	 */
+	private static final int SECONDS_TO_SLEEP = 2000;
 
 	/**
 	 * The WebDriver instance being decorated.
@@ -89,7 +94,7 @@ public final class WebDriverHelper {
 	 * @param y
 	 *            the Y coordinate
 	 */
-	public void scrollTo(int x, int y) {
+	public void scrollTo(final int x, final int y) {
 		((JavascriptExecutor) driver).executeScript("window.scrollTo(" + x
 				+ "," + y + ");");
 	}
@@ -101,12 +106,12 @@ public final class WebDriverHelper {
 	 * @param numberOfSeconds
 	 *            the duration in seconds to scroll
 	 */
-	public void scrollContinuously(int numberOfSeconds) {
+	public void scrollContinuously(final int numberOfSeconds) {
 		for (int i = 0; i < numberOfSeconds; i += 2) {
 			((JavascriptExecutor) driver)
 					.executeScript("window.scrollBy(0,250);");
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(SECONDS_TO_SLEEP);
 			} catch (InterruptedException e) {
 				LOG.info("Error while scrolling!");
 			}

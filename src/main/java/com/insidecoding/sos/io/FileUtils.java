@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -103,11 +102,8 @@ public final class FileUtils {
 	 *            the folder where the properties files can be found
 	 * @throws IOException
 	 *             if something goes wrong while reading the file
-	 * @throws FileNotFoundException
-	 *             if the file does not exists
 	 */
-	private void buildupPropertiesBundles(final File file)
-			throws FileNotFoundException, IOException {
+	private void buildupPropertiesBundles(final File file) throws IOException {
 		File[] files = file.listFiles();
 
 		for (File f : files) {
