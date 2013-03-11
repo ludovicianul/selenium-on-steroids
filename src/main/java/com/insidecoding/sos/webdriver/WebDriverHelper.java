@@ -1,6 +1,7 @@
 package com.insidecoding.sos.webdriver;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -13,6 +14,7 @@ import java.util.logging.Level;
 
 import junit.framework.Assert;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -20,7 +22,9 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Proxy.ProxyType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -45,7 +49,7 @@ import com.insidecoding.sos.Constants;
  * 
  */
 public final class WebDriverHelper {
-	
+
 	/**
 	 * The number of seconds to sleep.
 	 */
@@ -80,14 +84,35 @@ public final class WebDriverHelper {
 	}
 
 	/**
-	 * Refreshes the current page pressing CTRL + F5
+	 * Refreshes the current page pressing CTRL + F5.
 	 */
 	public void clearCache() {
 		throw new NotImplementedException();
 	}
 
 	/**
-	 * Scrolls the page to the specified coordinates
+	 * Simulates pressing F5.
+	 */
+	public void refresh() {
+		driver.navigate().refresh();
+	}
+
+	/**
+	 * Takes a screenshot of the current screen.
+	 * 
+	 * @param filename
+	 *            the name of the file where the screenshot will be saved
+	 * @throws IOException
+	 *             if something goes wrong while saving the screenshot
+	 */
+	public void takeScreenshot(String filename) throws IOException {
+		File screenshot = ((TakesScreenshot) driver)
+				.getScreenshotAs(OutputType.FILE);
+		FileUtils.copyFile(screenshot, new File(filename));
+	}
+
+	/**
+	 * Scrolls the page to the specified coordinates.
 	 * 
 	 * @param x
 	 *            the X coordinate
