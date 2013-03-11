@@ -2,8 +2,7 @@ Selenium on Steroids (SoS)
 ==========================
 The projects targets QA automation engineers that want a clean and simple way to create Selenium tests 
 allowing them to focus more on designing the tests rather than dealing with technical difficulties. 
-Using Maven profiles the instantiation of a WebDriver objects with different kind of configurations reduces to just
-setting some predefined properties. 
+Using a simple property file and Maven profiles the instantiation of a WebDriver objects with different kind of settings reduces to just setting some predefined properties. 
 The project enhances the functionality of the WebDriver API by offering additional methods for common tasks, having as a long run target to implement most of the Selenium IDE functions.
 SoS also offers different utility methods in order to interact with simple files, properties files,
 Excel documents, XML documents, Databases, post XML calls over HTTP, etc. Basically everything you need for your data driven testing scenarios.
@@ -19,7 +18,7 @@ Features
 * Utility methods to interact with text files and XML files
 * Utility methods to use XMLs over HTTP (make WebService calls for example) 
 * Easily control different WebDriver instances and configuration through properties
-* Get screenshots when Selenium tests are failing
+* Automatically take screenshots when Selenium tests are failing
 
 In order to get the most out of Selenium on Steriods you must write your Selenium tests using the JUnit framework.
 
