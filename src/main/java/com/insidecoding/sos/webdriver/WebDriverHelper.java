@@ -18,6 +18,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Cookie;
@@ -35,6 +36,8 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.security.Credentials;
+import org.openqa.selenium.security.UserAndPassword;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -88,6 +91,64 @@ public final class WebDriverHelper {
 	 */
 	public void clearCache() {
 		throw new NotImplementedException();
+	}
+
+	/**
+	 * Gets the current alert.
+	 * 
+	 * @return the current alert window
+	 */
+	public Alert getCurrentAlert() {
+		return driver.switchTo().alert();
+	}
+
+	/**
+	 * Chooses Cancel/No or any other "dismiss" button for the upcoming alert
+	 * window. If no alert is displayed an exception will be thrown.
+	 */
+	public void chooseCancelOnNextAlert() {
+		Alert alert = driver.switchTo().alert();
+
+		alert.dismiss();
+	}
+
+	/**
+	 * Chooses Yes/Ok or any other confirmation button for the upcoming alert
+	 * window. If no alert is displayed an exception will be thrown.
+	 */
+	public void chooseConfirmOnNextAlert() {
+		Alert alert = driver.switchTo().alert();
+
+		alert.accept();
+	}
+
+	/**
+	 * Enters the specified text into the upcoming input alert.
+	 * 
+	 * @param text
+	 *            the text to be entered
+	 */
+	public void sendTextToNextAlert(String text) {
+		Alert alert = driver.switchTo().alert();
+
+		alert.sendKeys(text);
+		alert.accept();
+	}
+
+	/**
+	 * Authenticates the user using the given username and password. This will
+	 * work only if the credentials are requested through an alert window.
+	 * 
+	 * @param username
+	 *            the user name
+	 * @param password
+	 *            the password
+	 */
+	public void authenticateOnNextAlert(String username, String password) {
+		Credentials credentials = new UserAndPassword(username, password);
+		Alert alert = driver.switchTo().alert();
+
+		alert.authenticateUsing(credentials);
 	}
 
 	/**
