@@ -266,6 +266,8 @@
 				<version>${findbugs.version}</version>
 				<configuration>
 					<xmlOutput>true</xmlOutput>
+					<threshold>Exp</threshold>
+					<includeFilterFile>findbugs.xml</includeFilterFile>
 				</configuration>
 			</plugin>
 
@@ -303,7 +305,7 @@
 				<artifactId>maven-checkstyle-plugin</artifactId>
 				<version>${checkstyle.version}</version>
 				<configuration>
-					<configLocation>my_checks.xml</configLocation>
+					<configLocation>checkstyle.xml</configLocation>
 					<outputFileFormat>xml</outputFileFormat>
 				</configuration>
 				<reportSets>
@@ -322,6 +324,9 @@
 					<format>xml</format>
 					<linkXRef>true</linkXRef>
 					<targetJdk>1.6</targetJdk>
+					<rulesets>
+						<ruleset>pmd.xml</ruleset>
+					</rulesets>
 				</configuration>
 			</plugin>
 			<plugin>
