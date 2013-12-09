@@ -12,7 +12,7 @@ public class TestGoogle extends AbstractSoSBase {
 	public void testFrontPage() throws Exception {
 		driver.get("http://google.ro");
 
-		WebElement search = driver.findElement(By.name("qjjjjs"));
+		WebElement search = driver.findElement(By.name("q"));
 		search.sendKeys("test");
 	}
 

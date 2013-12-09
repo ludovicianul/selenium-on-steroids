@@ -44,7 +44,7 @@ public final class Constants {
 		/**
 		 * Holds the string name for the HTML Unit browser
 		 */
-		public static final String HTML_UNIT = "htmlunit";
+		public static final String HTML_UNIT = "HtmlUnit";
 
 	}
 
