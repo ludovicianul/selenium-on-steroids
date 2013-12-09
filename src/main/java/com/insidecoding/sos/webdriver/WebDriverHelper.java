@@ -87,6 +87,24 @@ public final class WebDriverHelper {
 	}
 
 	/**
+	 * Highlights the specified element within the page *
+	 * 
+	 * 
+	 * @param element
+	 */
+	public void highlightElement(WebElement element) {
+		for (int i = 0; i < 2; i++) {
+			JavascriptExecutor js = (JavascriptExecutor) driver;
+			js.executeScript(
+					"arguments[0].setAttribute('style', arguments[1]);",
+					element, "color: yellow; border: 2px solid yellow;");
+			js.executeScript(
+					"arguments[0].setAttribute('style', arguments[1]);",
+					element, "");
+		}
+	}
+
+	/**
 	 * Refreshes the current page pressing CTRL + F5.
 	 */
 	public void clearCache() {

@@ -94,8 +94,10 @@ public final class TakeScreenshotOnFailureRule implements TestRule {
 					try {
 						st.evaluate();
 					} catch (Throwable throwable) {
+
 						try {
 							if (TakeScreenshotOnFailureRule.this.takeScreenshot) {
+
 								silentlySaveScreenshotTo(filenameFor(desc));
 							}
 						} catch (Exception e) {
