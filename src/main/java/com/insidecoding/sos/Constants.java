@@ -40,6 +40,12 @@ public final class Constants {
 		 * Holds the string name for the Internet Explorer browser.
 		 */
 		public static final String IE = "ie";
+
+		/**
+		 * Holds the string name for the HTML Unit browser
+		 */
+		public static final String HTML_UNIT = "htmlunit";
+
 	}
 
 	/**

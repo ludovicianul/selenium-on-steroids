@@ -129,7 +129,7 @@ public abstract class AbstractSoSBase {
 		}
 
 		if (isPropertyNotSet(browserName)) {
-			browserName = Constants.Browsers.FIREFOX;
+			browserName = Constants.Browsers.HTML_UNIT;
 		}
 
 		if (isPropertyNotSet(runMode)) {
