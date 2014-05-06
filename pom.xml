@@ -225,13 +225,11 @@
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
 			<version>${selenium.java.version}</version>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-htmlunit-driver</artifactId>
 			<version>${selenium.htmlunit.version}</version>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
