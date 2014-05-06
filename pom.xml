@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.insidecoding</groupId>
 	<artifactId>sos</artifactId>
@@ -13,12 +14,12 @@
 	</parent>
 
 	<properties>
-		<maven.site.plugin.version>3.2</maven.site.plugin.version>
+		<maven.site.plugin.version>3.3</maven.site.plugin.version>
 		<maven.resources.plugin.version>2.6</maven.resources.plugin.version>
 		<maven.compiler.plugin.version>3.0</maven.compiler.plugin.version>
 		<maven.surefire.plugin.version>2.13</maven.surefire.plugin.version>
-		<selenium.java.version>2.33.0</selenium.java.version>
-		<selenium.htmlunit.version>2.33.0</selenium.htmlunit.version>
+		<selenium.java.version>2.39.0</selenium.java.version>
+		<selenium.htmlunit.version>2.39.0</selenium.htmlunit.version>
 		<junit.version>4.10</junit.version>
 		<apache.poi.version>3.9</apache.poi.version>
 		<apache.poi.ooxml.version>3.9</apache.poi.ooxml.version>
@@ -224,11 +225,13 @@
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
 			<version>${selenium.java.version}</version>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-htmlunit-driver</artifactId>
 			<version>${selenium.htmlunit.version}</version>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
